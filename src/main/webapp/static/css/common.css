@@ -1,0 +1,230 @@
+/* styles.css */
+
+/* 通用样式 */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f6f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.container-fluid {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* 顶部导航栏 (Banner) */
+.banner {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.banner h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.banner p {
+    margin: 0;
+    font-size: 16px;
+}
+
+/* 左侧导航栏 */
+.sidebar {
+    background-color: #f8f9fa;
+    width: 250px;
+    height: 100%;
+    position: fixed;
+    top: 80px;
+    left: 0;
+    padding-top: 20px;
+    overflow-y: auto;
+}
+
+.sidebar .nav-item {
+    margin: 10px 0;
+}
+
+.sidebar .nav-link {
+    color: #343a40;
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+.sidebar .nav-link:hover {
+    background-color: #e9ecef;
+}
+
+/* 右侧内容区 */
+.content {
+    margin-left: 250px;
+    margin-top: 80px;
+    padding: 20px;
+    flex: 1;
+    background-color: #ffffff;
+}
+
+/* 页脚样式 */
+.footer {
+    background-color: #333;
+    color: white;
+    padding: 10px 30px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+/* 卡片样式 */
+.card {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card h5 {
+    margin: 0 0 10px;
+    font-size: 18px;
+}
+
+.card p {
+    margin: 0;
+    color: #666;
+}
+
+/* 表格样式 */
+.table {
+    width: 100%;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.table th {
+    background-color: #f2f2f2;
+}
+
+/* 按钮样式 */
+.btn {
+    margin: 5px; /* 为按钮添加外边距，增加间隔 */
+    padding: 10px 15px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* 表格中的按钮样式 */
+.table .btn {
+    margin: 2px; /* 如果按钮在表格中，可能需要更小的外边距 */
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .btn {
+        margin: 2px; /* 在小屏幕上进一步减小外边距 */
+    }
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-info {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .content {
+        margin-left: 0;
+    }
+}
+
+.banner {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px; /* 减小内边距 */
+    min-height: 50px; /* 设置一个较小的固定高度 */
+    border-radius: 0; /* 移除圆角 */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.banner h1 {
+    margin: 0;
+    font-size: 20px; /* 减小字体大小 */
+}
+
+.banner p {
+    margin: 0;
+    font-size: 14px; /* 减小字体大小 */
+}
+
+.btn-sm {
+    padding: 5px 10px; /* 减小按钮内边距 */
+    font-size: 12px; /* 减小按钮字体大小 */
+}
+
+.user-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.footer {
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    margin-top: 20px; /* 增加上边距 */
+    border-top: 3px solid #4CAF50; /* 添加顶部边框 */
+    position: relative; /* 相对定位 */
+}
+
+.footer p {
+    margin: 10px 0; /* 增加外边距 */
+    font-size: 14px; /* 减小字体大小 */
+}
+
+.footer a {
+    color: #b3e5fc; /* 链接颜色 */
+    text-decoration: none; /* 移除下划线 */
+}
+
+.footer a:hover {
+    text-decoration: underline; /* 鼠标悬停时添加下划线 */
+}
