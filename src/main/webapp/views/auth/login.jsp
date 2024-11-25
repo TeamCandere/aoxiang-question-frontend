@@ -130,8 +130,8 @@
                 })
                     .then(response => {
                         if (response.data.code === 200) {
-                            localStorage.setItem("token",response.data)
-                            window.location.href = '${ctx}/views/user/user_home.jsp';  // 登录成功，跳转至首页
+                            localStorage.setItem("token",response.data.data);
+                            this.checkUserTypeAndRedirect(response.data.data);
                         } else {
                             this.showErrorMessage('用户名或密码错误');
                         }
@@ -148,6 +148,29 @@
                     const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
                     toast.show();
                 });
+            },
+
+            checkUserTypeAndRedirect(token){
+                axios.post('${ctx}/api/user/profile', "token="+
+                     localStorage.getItem("token")
+                )
+                    .then(response => {
+                        if (response.data.code === 200) {
+                            if(response.data.data.role === "Admin")
+                            {
+                            window.location.href = '${ctx}/views/admin/admin_home.jsp';  // 登录成功，跳转至首页
+                            }
+                            else
+                            {
+                                window.location.href = '${ctx}/views/user/user_home.jsp';  // 登录成功，跳转至首页
+                            }
+                        } else {
+                            this.showErrorMessage(response.data.msg);
+                        }
+                    })
+                    .catch(() => {
+                        this.showErrorMessage('服务器错误，请稍后再试');
+                    });
             }
         }
     });

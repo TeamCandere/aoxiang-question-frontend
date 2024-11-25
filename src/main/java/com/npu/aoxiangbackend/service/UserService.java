@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
 import java.util.Optional;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -157,6 +158,19 @@ public class UserService {
         }
         if (!deleted) {
             throw new UserServiceException("删除用户失败：用户不存在。");
+        }
+    }
+
+    public List<User> getAllUsers(String tokenValue) throws UserServiceException, DatabaseAccessException {
+        var currentUser = getRequiredUser(tokenValue);
+        if (currentUser.getRole() != UserRole.Admin)
+            throw new UserServiceException("只有管理员可以查看所有用户。");
+
+        try {
+            return userDao.getAllUsers();
+        } catch (Exception e) {
+            printer.shortPrintException(e);
+            throw new DatabaseAccessException(e);
         }
     }
 

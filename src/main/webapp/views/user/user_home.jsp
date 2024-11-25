@@ -6,11 +6,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>用户首页</title>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- 引入 Bootstrap 样式 -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/bootstrap.min.css">
+    <!-- 引入自定义样式 -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/common.css">
+    <!-- 引入 Vue -->
+    <script src="${pageContext.request.contextPath}/static/js/vue.global.js"></script>
+    <!-- 引入 Axios -->
+    <script src="${pageContext.request.contextPath}/static/js/axios.min.js"></script>
+    <!-- 引入 Bootstrap 脚本 -->
+    <script src="${pageContext.request.contextPath}/static/js/bootstrap.bundle.min.js"></script>
     <style>
         /* 页面整体容器，使用 Flexbox 布局 */
         .container-fluid {

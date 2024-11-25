@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.List;
 
 @Repository
 public class UserDao implements IUserDao {
@@ -84,6 +85,17 @@ public class UserDao implements IUserDao {
                 session.getTransaction().commit(); // 如果用户不存在也提交事务
                 return false; // 用户不存在返回false
             }
+        }
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            var query = session.createQuery("from User", User.class);
+            List<User> users = query.list();
+            session.getTransaction().commit();
+            return users;
         }
     }
 }
