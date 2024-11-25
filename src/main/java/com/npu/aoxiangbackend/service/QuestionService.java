@@ -10,6 +10,7 @@ import com.npu.aoxiangbackend.util.ColoredPrintStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,6 +66,8 @@ public class QuestionService {
         question.setType(QuestionType.PlainText);
         question.setOrderIndex(existingQuestionCount + 1);
         question.setSourceSurveyId(surveyId);
+        question.setCreatedAt(ZonedDateTime.now());
+        question.setUpdatedAt(ZonedDateTime.now());
 
         try {
             return questionDao.addQuestion(question);

@@ -61,11 +61,21 @@ public class SurveyController {
         }
     }
 
-    @RequestMapping(value = "/init/{surveyId}", method = {RequestMethod.POST, RequestMethod.GET})
+    @RequestMapping(value = "/submit/{surveyId}", method = {RequestMethod.POST, RequestMethod.GET})
     public SaResult initSurvey(@PathVariable String surveyId, @RequestParam String token) {
         try {
             surveyService.submitSurvey(surveyId, token);
             return SaResult.ok("成功启用问卷。");
+        } catch (SurveyServiceException | UserServiceException | DatabaseAccessException e) {
+            return SaResult.error(e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "/check/{surveyId}", method = {RequestMethod.POST, RequestMethod.GET})
+    public SaResult checkSurvey(@PathVariable String surveyId, @RequestParam String token) {
+        try {
+            surveyService.checkSurvey(surveyId, token);
+            return SaResult.ok("成功审核问卷。");
         } catch (SurveyServiceException | UserServiceException | DatabaseAccessException e) {
             return SaResult.error(e.getMessage());
         }
