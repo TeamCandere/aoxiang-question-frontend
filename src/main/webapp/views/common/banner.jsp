@@ -47,8 +47,8 @@
 
                 <!-- 游客版块按钮 -->
                 <template v-else>
-                    <a href="/login" class="btn btn-outline-light btn-sm">登录</a>
-                    <a href="/register" class="btn btn-outline-light btn-sm">注册</a>
+                    <a href="<c:url value="/views/auth/login.jsp"/>" class="btn btn-outline-light btn-sm">登录</a>
+                    <a href="<c:url value="/views/auth/register.jsp"/>" class="btn btn-outline-light btn-sm">注册</a>
                 </template>
             </div>
         </div>
