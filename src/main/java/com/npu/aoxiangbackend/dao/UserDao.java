@@ -89,6 +89,15 @@ public class UserDao implements IUserDao {
     }
 
     @Override
+    public long getUserCount() {
+            try (Session session = sessionFactory.openSession()) {
+                session.beginTransaction();
+                var query = session.createQuery("select count(*) from User", Long.class);
+                return query.getSingleResult();
+            }
+    }
+
+    @Override
     public List<User> getAllUsers() {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();

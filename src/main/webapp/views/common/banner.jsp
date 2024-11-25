@@ -13,7 +13,7 @@
     <script src="${pageContext.request.contextPath}/static/js/axios.min.js"></script>
     <!-- 引入 Bootstrap 脚本 -->
     <script src="${pageContext.request.contextPath}/static/js/bootstrap.bundle.min.js"></script>
-    <title></title>
+    <title>banner</title>
 </head>
 <body>
 
@@ -57,7 +57,7 @@
         <div class="d-flex align-items-center ms-3">
             <template v-if="isLoggedIn">
                 <img :src="avatarUrl" alt="用户头像" class="user-avatar">
-                <span class="ms-2">欢迎, {{ username }}!</span>
+                <span class="ms-2">欢迎, {{ nickname || username }}!</span>
                 <span class="ms-2">用户角色: {{ userRole }}</span>
             </template>
             <template v-else>
@@ -69,15 +69,16 @@
 
 <!-- Vue.js 代码 -->
 <script>
-    new Vue({
-        el: '#app',
-        data: {
-            isLoggedIn: false,
-            userRole: 'guest',
-            username: '游客',
-            nickname: '',
-            avatarUrl: 'https://via.placeholder.com/40',
-            token: localStorage.getItem("token") // 从URL参数中获取token
+    const app = Vue.createApp({
+        data() {
+            return {
+                isLoggedIn: false,
+                userRole: 'guest',
+                username: '游客',
+                nickname: '',
+                avatarUrl: 'https://via.placeholder.com/40',
+                token: localStorage.getItem("token") // 从 localStorage 中获取 token
+            };
         },
         mounted() {
             if (this.token) {
@@ -86,7 +87,7 @@
         },
         methods: {
             fetchUserProfile(token) {
-                axios.post('${pageContext.request.contextPath}/profile', "token="+ token)
+                axios.post('${pageContext.request.contextPath}/api/user/profile', "token=" + token)
                     .then(response => {
                         if (response.data.code === 200) {
                             const user = response.data.data;
@@ -94,7 +95,7 @@
                             this.userRole = user.role;
                             this.username = user.username;
                             this.nickname = user.displayName; // 如果有昵称则使用昵称，否则使用用户名
-                            // this.avatarUrl = user.avatarUrl || 'https://via.placeholder.com/40';
+                            this.avatarUrl = user.avatarUrl || 'https://via.placeholder.com/40'; // 设置用户头像
                         } else {
                             console.error('Failed to fetch user profile:', response.data.message);
                         }
@@ -105,6 +106,8 @@
             }
         }
     });
+
+    app.mount('#app');
 </script>
 
 </body>

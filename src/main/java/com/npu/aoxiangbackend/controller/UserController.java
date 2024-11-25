@@ -98,4 +98,14 @@ public class UserController {
             return SaResult.error(e.getMessage());
         }
     }
+
+    @RequestMapping(value = "/count", method = {RequestMethod.GET, RequestMethod.POST})
+    public SaResult getUserCount(@RequestParam(required = true) String token){
+        try{
+            var userNum = userService.getUserNum(token);
+            return SaResult.ok().setData(userNum);
+        } catch (UserServiceException | DatabaseAccessException e) {
+            return SaResult.error(e.getMessage());
+        }
+    }
 }

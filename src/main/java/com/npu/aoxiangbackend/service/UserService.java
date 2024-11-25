@@ -174,6 +174,19 @@ public class UserService {
         }
     }
 
+    public long getUserNum(String tokenValue) throws UserServiceException, DatabaseAccessException {
+        var currentUser = getRequiredUser(tokenValue);
+        if (currentUser.getRole() != UserRole.Admin)
+            throw new UserServiceException("只有管理员可以查看所有用户。");
+
+        try {
+            return userDao.getUserCount();
+        } catch (Exception e) {
+            printer.shortPrintException(e);
+            throw new DatabaseAccessException(e);
+        }
+    }
+
     public boolean isTokenValid(String token) {
         return StpUtil.getLoginIdByToken(token) != null;
     }

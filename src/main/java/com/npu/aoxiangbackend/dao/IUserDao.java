@@ -18,5 +18,7 @@ public interface IUserDao {
 
     public boolean deleteUser(long id);
 
+    public long getUserCount();
+
     List<User> getAllUsers();
 }
