@@ -5,6 +5,7 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 
 /**
@@ -13,8 +14,9 @@ import org.springframework.context.annotation.Import;
 // 定义为配置类
 @Configuration
 // 引入数据库配置类
-@Import({BeanConfig.class})
+@Import({BeanConfig.class, WebConfig.class})
+@EnableWebMvc
 // 定义Spring 扫描的包名，采用自定义扫描类WebPackage
-@ComponentScan(basePackages = {"com.npu.aoxiangbackend"}, excludeFilters = {@Filter(type = FilterType.ANNOTATION)})
+@ComponentScan(basePackages = {"com.npu.aoxiangbackend"})
 public class RootConfig {
 }

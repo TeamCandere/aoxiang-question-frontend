@@ -94,7 +94,7 @@ public class QuestionService {
         throw new NotImplException("该方法暂未实现");
     }
 
-    private Question getRequiredQuestion(long questionId) throws DatabaseAccessException, QuestionServiceException {
+    public Question getRequiredQuestion(long questionId) throws DatabaseAccessException, QuestionServiceException {
         Optional<Question> questionOptional;
         try {
             questionOptional = questionDao.findQuestionById(questionId);
@@ -106,5 +106,10 @@ public class QuestionService {
             throw new QuestionServiceException(String.format("该问题不存在：%d", questionId));
         }
         return questionOptional.get();
+    }
+
+    public boolean canViewQuestion(long questionId, String tokenValue) throws DatabaseAccessException, QuestionServiceException {
+        var question = getRequiredQuestion(questionId);
+        return surveyService.canViewSurvey(question.getSourceSurveyId(), tokenValue);
     }
 }

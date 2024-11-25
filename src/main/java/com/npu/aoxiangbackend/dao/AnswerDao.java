@@ -1,6 +1,6 @@
 package com.npu.aoxiangbackend.dao;
 
-import com.npu.aoxiangbackend.model.Response;
+import com.npu.aoxiangbackend.model.Answer;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,82 +10,88 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository // 标记为Spring管理的Repository组件
-public class ResponseDao implements IResponseDao {
+public class AnswerDao implements IAnswerDao {
 
     private final SessionFactory sessionFactory; // 注入SessionFactory用于创建Session
 
     @Autowired // 自动注入SessionFactory
-    public ResponseDao(SessionFactory sessionFactory) {
+    public AnswerDao(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory; // 构造器注入SessionFactory
     }
 
-    public Optional<Response> findResponseById(String id) {
+    @Override
+    public Optional<Answer> findAnswerById(long id) {
         try (Session session = sessionFactory.openSession()) { // 打开一个新的Session
             session.beginTransaction(); // 开始事务
-            Response response = session.get(Response.class, id); // 根据ID查找Response对象
+            Answer answer = session.get(Answer.class, id); // 根据ID查找Answer对象
             session.getTransaction().commit(); // 提交事务
-            return Optional.ofNullable(response); // 返回可能为空的结果
+            return Optional.ofNullable(answer); // 返回可能为空的结果
         }
     }
 
-    public Optional<Response> findResponseBySurveyIdAndUserId(String surveyId, long userId) {
+    @Override
+    public List<Answer> findAnswersByResponseId(String responseId) {
         try (Session session = sessionFactory.openSession()) { // 打开一个新的Session
             session.beginTransaction(); // 开始事务
-            var query = session.createQuery("from Response where surveyId = :surveyId and userId = :userId", Response.class); // 创建查询
-            query.setParameter("surveyId", surveyId); // 设置查询参数
-            query.setParameter("userId", userId); // 设置查询参数
-            var response = query.uniqueResultOptional(); // 获取唯一结果或空
+            var query = session.createQuery("from Answer where responseId = :responseId", Answer.class); // 创建查询
+            query.setParameter("responseId", responseId); // 设置查询参数
+            var answers = query.getResultList(); // 获取结果列表
             session.getTransaction().commit(); // 提交事务
-            return response; // 返回结果
+            return answers; // 返回结果列表
         }
     }
 
-    public List<Response> findResponsesBySurveyId(String surveyId) {
+    @Override
+    public List<Answer> findAnswersByQuestionId(long questionId) {
         try (Session session = sessionFactory.openSession()) { // 打开一个新的Session
             session.beginTransaction(); // 开始事务
-            var query = session.createQuery("from Response where surveyId = :surveyId", Response.class); // 创建查询
-            query.setParameter("surveyId", surveyId); // 设置查询参数
-            var responses = query.getResultList(); // 获取结果列表
+            var query = session.createQuery("from Answer where questionId = :questionId", Answer.class); // 创建查询
+            query.setParameter("questionId", questionId); // 设置查询参数
+            var answers = query.getResultList(); // 获取结果列表
             session.getTransaction().commit(); // 提交事务
-            return responses; // 返回结果列表
+            return answers; // 返回结果列表
         }
     }
 
-    public List<Response> findResponsesByUserId(long userId) {
+    public Optional<Answer> findAnswerByResponseIdAndQuestionId(String responseId, long questionId) {
         try (Session session = sessionFactory.openSession()) { // 打开一个新的Session
             session.beginTransaction(); // 开始事务
-            var query = session.createQuery("from Response where userId = :userId", Response.class); // 创建查询
-            query.setParameter("userId", userId); // 设置查询参数
-            var responses = query.getResultList(); // 获取结果列表
+            var query = session.createQuery("from Answer where questionId = :questionId and responseId = :responseId", Answer.class); // 创建查询
+            query.setParameter("questionId", questionId); // 设置查询参数
+            query.setParameter("responseId", responseId); // 设置查询参数
+            var answer = query.uniqueResultOptional(); // 获取结果列表
             session.getTransaction().commit(); // 提交事务
-            return responses; // 返回结果列表
+            return answer;
         }
     }
 
-    public String addResponse(Response response) {
+    @Override
+    public long addAnswer(Answer answer) {
         try (Session session = sessionFactory.openSession()) { // 打开一个新的Session
             session.beginTransaction(); // 开始事务
-            String responseId = (String) session.save(response); // 保存新的Response对象并获取生成的ID
+            long answerId = (long) session.save(answer); // 保存新的Answer对象并获取生成的ID
             session.getTransaction().commit(); // 提交事务
-            return responseId; // 返回新生成的ID
+            return answerId; // 返回新生成的ID
         }
     }
 
-    public boolean updateResponse(Response response) {
+    @Override
+    public boolean updateAnswer(Answer answer) {
         try (Session session = sessionFactory.openSession()) { // 打开一个新的Session
             session.beginTransaction(); // 开始事务
-            session.update(response); // 更新已存在的Response对象
+            session.update(answer); // 更新已存在的Answer对象
             session.getTransaction().commit(); // 提交事务
             return true; // 返回成功标志
         }
     }
 
-    public boolean deleteResponse(String id) {
+    @Override
+    public boolean deleteAnswer(long id) {
         try (Session session = sessionFactory.openSession()) { // 打开一个新的Session
             session.beginTransaction(); // 开始事务
-            Response response = session.get(Response.class, id); // 根据ID查找Response对象
-            if (response != null) { // 如果对象存在
-                session.delete(response); // 删除对象
+            Answer answer = session.get(Answer.class, id); // 根据ID查找Answer对象
+            if (answer != null) { // 如果对象存在
+                session.delete(answer); // 删除对象
                 session.getTransaction().commit(); // 提交事务
                 return true; // 返回成功标志
             } else {

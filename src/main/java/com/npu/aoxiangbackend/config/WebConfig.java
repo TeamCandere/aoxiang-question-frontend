@@ -36,7 +36,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public ViewResolver viewResolver() {
         InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-        resolver.setPrefix("/WEB-INF/views/");
+        resolver.setPrefix("/views/");
         resolver.setSuffix(".jsp");
         return resolver;
     }
@@ -69,7 +69,8 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
-        WebMvcConfigurer.super.addResourceHandlers(registry);
+        // 配置静态资源的映射
+        registry.addResourceHandler("/static/**")
+                .addResourceLocations("file:/D:/NPU/Web系统开发与实践/Final/aoxiang-question-frontend/src/main/webapp/static/");
     }
 }
