@@ -22,4 +22,8 @@ public interface ISurveyDao {
     public boolean updateSurvey(Survey survey);
 
     public boolean deleteSurvey(String id);
+
+    public long getTotalSurveys();
+
+    public long getApprovedSurveys();
 }

@@ -87,4 +87,21 @@ public class SurveyDao implements ISurveyDao {
             }
         }
     }
+
+    public long getTotalSurveys() {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            var query = session.createQuery("select count(*) from Survey", Long.class);
+            return query.getSingleResult();
+        }
+    }
+
+    public long getApprovedSurveys() {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            var query = session.createQuery("select count(*) from Survey where isChecked = :checked", Long.class);
+            query.setParameter("checked", true);
+            return query.getSingleResult();
+        }
+    }
 }

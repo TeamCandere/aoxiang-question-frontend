@@ -211,6 +211,24 @@ public class SurveyService {
         }
     }
 
+    public long getTotalSurveys() throws DatabaseAccessException {
+        try {
+            return surveyDao.getTotalSurveys();
+        } catch (Exception e) {
+            printer.shortPrintException(e);
+            throw new DatabaseAccessException(e);
+        }
+    }
+
+    public long getApprovedSurveys() throws DatabaseAccessException {
+        try {
+            return surveyDao.getApprovedSurveys();
+        } catch (Exception e) {
+            printer.shortPrintException(e);
+            throw new DatabaseAccessException(e);
+        }
+    }
+
     public boolean canViewSurvey(String surveyId, String tokenValue) throws DatabaseAccessException {
         try {
             accessSurvey(surveyId, tokenValue);
