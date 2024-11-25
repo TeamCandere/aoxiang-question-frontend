@@ -36,7 +36,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public ViewResolver viewResolver() {
         InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-        resolver.setPrefix("/WEB-INF/views/");
+        resolver.setPrefix("/views/");
         resolver.setSuffix(".jsp");
         return resolver;
     }
@@ -51,6 +51,7 @@ public class WebConfig implements WebMvcConfigurer {
      * ，它几乎把所有的请求都拦截了，从而导致1.png 访问不到，这时注册一个DefaultServletHttpRequestHandler
      * 就可以解决这个问题。其实可以理解为DispatcherServlet破坏了Servlet的一个特性（根目录下的文件可以直接访问），
      * DefaultServletHttpRequestHandler是帮助回归这个特性的。
+     * <p>
      * 题外话
      * 问：　/和/*　有什么区别？
      * 答： /会拦截除了jsp以外的所有url，/* 会拦截所有url，包括jsp。
@@ -63,13 +64,13 @@ public class WebConfig implements WebMvcConfigurer {
         configurer.enable();
     }
 
-
-
     /**
      * 定义静态资源处理
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // 配置静态资源的映射
+        registry.addResourceHandler("/static/**")
+                .addResourceLocations("file:/D:/NPU/Web系统开发与实践/Final/aoxiang-question-frontend/src/main/webapp/static/");
     }
 }
-
