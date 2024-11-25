@@ -17,7 +17,7 @@ import java.io.IOException;
 @RequestMapping("/static")
 public class ResourceController {
 
-    private ColoredPrintStream printer;
+    private final ColoredPrintStream printer;
 
     @Autowired
     public ResourceController(ColoredPrintStream printer) {

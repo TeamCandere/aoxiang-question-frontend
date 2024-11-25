@@ -9,8 +9,11 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/common.css">
     <!-- 引入 Vue -->
     <script src="${pageContext.request.contextPath}/static/js/vue.global.js"></script>
+    <!-- 引入 Axios -->
+    <script src="${pageContext.request.contextPath}/static/js/axios.min.js"></script>
     <!-- 引入 Bootstrap 脚本 -->
     <script src="${pageContext.request.contextPath}/static/js/bootstrap.bundle.min.js"></script>
+    <title>banner</title>
 </head>
 <body>
 
@@ -30,7 +33,7 @@
                 <!-- 判断用户是否登录 -->
                 <template v-if="isLoggedIn">
                     <!-- 如果已登录，根据用户类型显示按钮 -->
-                    <template v-if="userType === 'admin'">
+                    <template v-if="userRole === 'admin'">
                         <a href="/adminDashboard" class="btn btn-outline-light btn-sm">查看管理面板</a>
                         <a href="/manageUsers" class="btn btn-outline-light btn-sm">用户管理</a>
                         <a href="/approveForms" class="btn btn-outline-light btn-sm">审核问卷</a>
@@ -54,7 +57,8 @@
         <div class="d-flex align-items-center ms-3">
             <template v-if="isLoggedIn">
                 <img :src="avatarUrl" alt="用户头像" class="user-avatar">
-                <span class="ms-2">欢迎, {{ username }}!</span>
+                <span class="ms-2">欢迎, {{ nickname || username }}!</span>
+                <span class="ms-2">用户角色: {{ userRole }}</span>
             </template>
             <template v-else>
                 <span>欢迎, 游客!</span>
@@ -65,22 +69,45 @@
 
 <!-- Vue.js 代码 -->
 <script>
-    new Vue({
-        el: '#app',
-        data: {
-            isLoggedIn: false,
-            userType: 'guest',
-            username: '游客',
-            avatarUrl: 'https://via.placeholder.com/40'
+    const app = Vue.createApp({
+        data() {
+            return {
+                isLoggedIn: false,
+                userRole: 'guest',
+                username: '游客',
+                nickname: '',
+                avatarUrl: 'https://via.placeholder.com/40',
+                token: localStorage.getItem("token") // 从 localStorage 中获取 token
+            };
         },
         mounted() {
-            // 假设用户未登录
-            this.isLoggedIn = false;
-            this.userType = 'guest';
-            this.username = '游客';
-            this.avatarUrl = 'https://via.placeholder.com/40';
+            if (this.token) {
+                this.fetchUserProfile(this.token);
+            }
+        },
+        methods: {
+            fetchUserProfile(token) {
+                axios.post('${pageContext.request.contextPath}/api/user/profile', "token=" + token)
+                    .then(response => {
+                        if (response.data.code === 200) {
+                            const user = response.data.data;
+                            this.isLoggedIn = true;
+                            this.userRole = user.role;
+                            this.username = user.username;
+                            this.nickname = user.displayName; // 如果有昵称则使用昵称，否则使用用户名
+                            this.avatarUrl = user.avatarUrl || 'https://via.placeholder.com/40'; // 设置用户头像
+                        } else {
+                            console.error('Failed to fetch user profile:', response.data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching user profile:', error);
+                    });
+            }
         }
     });
+
+    app.mount('#app');
 </script>
 
 </body>
