@@ -10,8 +10,6 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/bootstrap.min.css">
     <!-- 引入 Bootstrap 脚本 -->
     <script src="${pageContext.request.contextPath}/static/js/bootstrap.bundle.min.js"></script>
-    <!-- 引入 Vue -->
-    <script src="${pageContext.request.contextPath}/static/js/vue.global.js"></script>
     <!-- 引入自定义样式 -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/common.css">
     <style>
@@ -96,13 +94,13 @@
     <div class="sidebar">
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link active" href="#" @click="showPage('system_info')">管理员首页</a>
+                <a class="nav-link ${param.page == 'system_info' ? 'active' : ''}" href="?page=system_info">管理员首页</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#" @click="showPage('manage_users')">用户管理</a>
+                <a class="nav-link ${param.page == 'manage_users' ? 'active' : ''}" href="?page=manage_users">用户管理</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#" @click="showPage('review_forms')">问卷管理</a>
+                <a class="nav-link ${param.page == 'review_forms' ? 'active' : ''}" href="?page=review_forms">问卷管理</a>
             </li>
         </ul>
     </div>
@@ -110,37 +108,24 @@
     <!-- 右侧内容区 -->
     <div class="content">
         <!-- 动态加载的页面内容 -->
-        <div v-if="currentPage === 'system_info'">
-            <jsp:include page="system_info.jsp" />
-        </div>
-        <div v-if="currentPage === 'manage_users'">
-            <jsp:include page="manage_users.jsp" />
-        </div>
-        <div v-if="currentPage === 'review_forms'">
-            <jsp:include page="review_forms.jsp" />
-        </div>
+        <c:choose>
+            <c:when test="${param.page == 'system_info'}">
+                <jsp:include page="system_info.jsp" />
+            </c:when>
+            <c:when test="${param.page == 'manage_users'}">
+                <jsp:include page="manage_users.jsp" />
+            </c:when>
+            <c:when test="${param.page == 'review_forms'}">
+                <jsp:include page="review_forms.jsp" />
+            </c:when>
+            <c:otherwise>
+                <jsp:include page="system_info.jsp" />
+            </c:otherwise>
+        </c:choose>
     </div>
 </div>
 
 <!-- 页脚 -->
 <jsp:include page="../common/footer.jsp" />
-
-<!-- 使用 Vue 渲染内容切换 -->
-<script>
-    const app = Vue.createApp({
-        data() {
-            return {
-                currentPage: 'system_info'  // 默认显示系统信息
-            };
-        },
-        methods: {
-            showPage(page) {
-                this.currentPage = page;  // 根据点击按钮切换页面
-            }
-        }
-    });
-
-    app.mount('body');
-</script>
 </body>
 </html>

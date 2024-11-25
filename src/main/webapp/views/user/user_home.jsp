@@ -10,10 +10,6 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/bootstrap.min.css">
     <!-- 引入自定义样式 -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/common.css">
-    <!-- 引入 Vue -->
-    <script src="${pageContext.request.contextPath}/static/js/vue.global.js"></script>
-    <!-- 引入 Axios -->
-    <script src="${pageContext.request.contextPath}/static/js/axios.min.js"></script>
     <!-- 引入 Bootstrap 脚本 -->
     <script src="${pageContext.request.contextPath}/static/js/bootstrap.bundle.min.js"></script>
     <style>
@@ -93,15 +89,18 @@
 <!-- 顶部导航栏 (Banner) -->
 <jsp:include page="../common/banner.jsp" />
 
-<div class="container-fluid" id="userHomeApp">
+<div class="container-fluid">
     <!-- 左侧导航栏 -->
     <div class="sidebar">
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link" href="#" @click="showPage('user_info')">用户信息</a>
+                <a class="nav-link ${param.page == 'user_info' ? 'active' : ''}" href="?page=user_info">用户信息</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" href="#" @click="showPage('my_forms')">问卷概览</a>
+                <a class="nav-link ${param.page == 'my_forms' ? 'active' : ''}" href="?page=my_forms">问卷概览</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link ${param.page == 'settings' ? 'active' : ''}" href="?page=settings">设置</a>
             </li>
         </ul>
     </div>
@@ -109,34 +108,24 @@
     <!-- 右侧内容区 -->
     <div class="content">
         <!-- 动态加载的页面内容 -->
-        <div v-if="currentPage === 'user_info'">
-            <jsp:include page="user_info.jsp" />
-        </div>
-        <div v-if="currentPage === 'my_forms'">
-            <jsp:include page="my_forms.jsp" />
-        </div>
+        <c:choose>
+            <c:when test="${param.page == 'user_info'}">
+                <jsp:include page="user_info.jsp" />
+            </c:when>
+            <c:when test="${param.page == 'my_forms'}">
+                <jsp:include page="my_forms.jsp" />
+            </c:when>
+            <c:when test="${param.page == 'settings'}">
+                <jsp:include page="settings.jsp" />
+            </c:when>
+            <c:otherwise>
+                <jsp:include page="my_forms.jsp" /> <!-- 默认显示问卷概览 -->
+            </c:otherwise>
+        </c:choose>
     </div>
 </div>
 
 <!-- 页脚 -->
 <jsp:include page="../common/footer.jsp" />
-
-<!-- 使用 Vue 渲染内容切换 -->
-<!-- 引入 Vue.js 和 Axios -->
-<script>
-    new Vue({
-        el: '#userHomeApp',
-        data() {
-            return {
-                currentPage: 'my_forms'  // 默认显示问卷概览
-            };
-        },
-        methods: {
-            showPage(page) {
-                this.currentPage = page;  // 根据点击按钮切换页面
-            }
-        }
-    });
-</script>
 </body>
 </html>
