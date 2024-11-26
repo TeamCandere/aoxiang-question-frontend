@@ -38,7 +38,8 @@
 
     <!-- 新建问卷按钮 -->
     <div class="text-right mb-3">
-        <a href="/survey/create" class="btn btn-primary">创建新问卷</a>
+        <a href="/" class="btn btn-primary">创建新问卷</a>
+<%--        jfoweijfowiejfoiqawejdfoijwadiofjoawiej--%>
     </div>
 
     <!-- 已回答问卷部分 -->
@@ -128,7 +129,8 @@
         },
         mounted() {
             if (this.token) {
-                this.fetchSurveys();
+                this.fetchCreatedSurveys();
+                this.fetchFilledSurveys();
             }
         },
         methods: {
