@@ -9,4 +9,5 @@ public class ModifyProfileRequest {
     String phone;
     String oldPassword;
     String newPassword;
+    String token;
 }
