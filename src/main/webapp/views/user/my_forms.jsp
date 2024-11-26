@@ -33,12 +33,13 @@
     <script src="${pageContext.request.contextPath}/static/js/axios.min.js"></script>
 </head>
 <body>
-<div class="container" id="surveyOverviewApp" style="margin-top: 50px;">
+<div class="container" id="myFormsApp" style="margin-top: 50px;">
     <h1 class="text-center mb-4">问卷概览</h1>
 
     <!-- 新建问卷按钮 -->
     <div class="text-right mb-3">
-        <a href="/survey/create" class="btn btn-primary">创建新问卷</a>
+        <a href="/" class="btn btn-primary">创建新问卷</a>
+<%--        jfoweijfowiejfoiqawejdfoijwadiofjoawiej--%>
     </div>
 
     <!-- 已回答问卷部分 -->
@@ -128,7 +129,8 @@
         },
         mounted() {
             if (this.token) {
-                this.fetchSurveys();
+                this.fetchCreatedSurveys();
+                this.fetchFilledSurveys();
             }
         },
         methods: {
@@ -164,7 +166,6 @@
             }
         }
     });
-
     myFormsApp.mount('#myFormsApp');
 </script>
 </body>

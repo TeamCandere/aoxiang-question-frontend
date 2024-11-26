@@ -30,7 +30,7 @@ public class UserService {
         this.printer = coloredPrintStream;
     }
 
-    public void throwOnInvalidRegister(String username, String password) throws UserServiceException, DatabaseAccessException {
+    private void checkUsernameAndPasswordFormat(String username, String password) throws UserServiceException {
         if (username.length() < 4 || username.length() > 40) {
             throw new UserServiceException("用户名长度必须在4和40之间。");
         }
@@ -38,7 +38,10 @@ public class UserService {
         if (password.length() < 6 || password.length() > 64) {
             throw new UserServiceException("密码长度必须在6和64之间。");
         }
+    }
 
+    public void throwOnInvalidRegister(String username, String password) throws UserServiceException, DatabaseAccessException {
+        checkUsernameAndPasswordFormat(username, password);
         Optional<User> userOptional;
 
         try {
@@ -204,12 +207,15 @@ public class UserService {
     public void editUserProfile(String displayName, String oldPassword, String newPassword,
                                 String email, String phoneNumber, String token) throws UserServiceException, DatabaseAccessException {
         var user = getRequiredUser(token);
-
+        var username = user.getUsername();
+        var password = user.getPassword();
         //验证用户名和密码格式
-        throwOnInvalidRegister(user.getUsername(), newPassword);
+        checkUsernameAndPasswordFormat(username, password);
+
         if (!Objects.equals(user.getPassword(), oldPassword)) {
             throw new UserServiceException("用户的旧密码不正确。");
         }
+        user.setPassword(newPassword);
         if (displayName != null)
             user.setDisplayName(displayName);
         if (email != null)

@@ -1,6 +1,7 @@
 ﻿<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="true" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -72,7 +73,7 @@
             <div class="out">
                 <div class="left">
                     <div class="img"></div>
-                    <div class="username">{{ userData.username }}</div>
+                    <div class="username">{{ userData?.displayName || '用户名' }}</div>
                 </div>
             </div>
         </div>
@@ -126,6 +127,7 @@
     const userInfoApp = Vue.createApp({
         data() {
             return {
+                token: localStorage.getItem("token"),
                 userData: null,
                 newData: {
                     displayName: '',
@@ -138,7 +140,7 @@
         },
         methods: {
             fetchUserData() {
-                axios.get('api/user/profile', {
+                axios.get('${ctx}/api/user/profile', {
                     params: {token: this.token}
                 })
                     .then(response => {
@@ -154,11 +156,13 @@
                     })
             },
             submitForm() {
-                axios.post('api/user/modify', {
-                    params: {
-                        token: this.token
-                    },
-                    newData: this.newData
+                axios.post('${ctx}/api/user/modify', {
+                    displayName: this.newData.displayName,
+                    oldPassword: this.newData.oldPassword,
+                    newPassword: this.newData.newPassword,
+                    email: this.newData.email,
+                    phoneNumber: this.newData.phone,
+                    token: this.token
                 })
                     .then(response => {
                             if (response.data.code === 200) {
@@ -182,7 +186,9 @@
             }
         },
         mounted() {
-            this.originalData = {...this.userData}; // 保存原始数据
+            if (this.token) {
+                this.fetchUserData();
+            }
         }
     });
 

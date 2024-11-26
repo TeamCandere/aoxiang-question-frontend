@@ -18,7 +18,7 @@
 <body>
 
 <!-- Vue.js 实例 -->
-<div id="app">
+<div id="bannerApp">
     <!-- Banner -->
     <div class="banner d-flex justify-content-between align-items-center">
         <!-- 左侧：网站名和当前版块 -->
@@ -69,7 +69,7 @@
 
 <!-- Vue.js 代码 -->
 <script>
-    const app = Vue.createApp({
+    const bannerApp = Vue.createApp({
         data() {
             return {
                 isLoggedIn: false,
@@ -77,7 +77,7 @@
                 username: '游客',
                 nickname: '',
                 avatarUrl: 'https://via.placeholder.com/40',
-                token: localStorage.getItem("token") // 从 localStorage 中获取 token
+                token: localStorage.getItem("token"), // 从 localStorage 中获取 token
                 haveTurnToLogin: true
             };
         },
@@ -85,12 +85,9 @@
             if (this.token) {
                 this.fetchUserProfile(this.token);
             }
-            if(!this.isLoggedIn) {
-                window.location.href='${pageContext.request.contextPath}/views/auth/login.jsp';
-            }
         },
         methods: {
-            fetchUserProfile(token) {
+            async fetchUserProfile(token) {
                 axios.post('${pageContext.request.contextPath}/api/user/profile', "token=" + token)
                     .then(response => {
                         if (response.data.code === 200) {
@@ -104,6 +101,9 @@
                             this.haveTurnToLogin = false;
                             console.error('Failed to fetch user profile:', response.data.message);
                         }
+                        if(!this.isLoggedIn && !this.haveTurnToLogin) {
+                            window.location.href='${pageContext.request.contextPath}/views/auth/login.jsp';
+                        }
                     })
                     .catch(error => {
                         console.error('Error fetching user profile:', error);
@@ -112,7 +112,7 @@
         }
     });
 
-    app.mount('#app');
+    bannerApp.mount('#bannerApp');
 </script>
 
 </body>

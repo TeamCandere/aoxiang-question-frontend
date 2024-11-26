@@ -111,9 +111,9 @@ public class UserController {
     }
 
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
-    public SaResult editUserProfile(@RequestBody ModifyProfileRequest modRequest, @RequestParam String token) {
+    public SaResult editUserProfile(@RequestBody ModifyProfileRequest modRequest) {
         try {
-            userService.editUserProfile(modRequest.getDisplayName(), modRequest.getOldPassword(), modRequest.getNewPassword(), modRequest.getEmail(), modRequest.getPhone(), token);
+            userService.editUserProfile(modRequest.getDisplayName(), modRequest.getOldPassword(), modRequest.getNewPassword(), modRequest.getEmail(), modRequest.getPhone(), modRequest.getToken());
             return SaResult.ok("成功修改用户信息。");
         } catch (UserServiceException | DatabaseAccessException e) {
             return SaResult.error(e.getMessage());
