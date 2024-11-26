@@ -1,6 +1,7 @@
 package com.npu.aoxiangbackend.controller;
 
 import cn.dev33.satoken.util.SaResult;
+import com.npu.aoxiangbackend.exception.business.BusinessException;
 import com.npu.aoxiangbackend.exception.business.SurveyServiceException;
 import com.npu.aoxiangbackend.exception.business.UserServiceException;
 import com.npu.aoxiangbackend.exception.internal.DatabaseAccessException;
@@ -28,6 +29,17 @@ public class SurveyController {
         try {
             surveys = surveyService.getSurveysByToken(token);
         } catch (UserServiceException | DatabaseAccessException e) {
+            return SaResult.error(e.getMessage());
+        }
+        return SaResult.ok().setData(surveys);
+    }
+
+    @GetMapping("/filled")
+    public SaResult listFilledSurveys(@RequestParam(required = true) String token) {
+        List<Survey> surveys = null;
+        try {
+            surveys = surveyService.getFilledSurveys(token);
+        } catch (BusinessException e) {
             return SaResult.error(e.getMessage());
         }
         return SaResult.ok().setData(surveys);

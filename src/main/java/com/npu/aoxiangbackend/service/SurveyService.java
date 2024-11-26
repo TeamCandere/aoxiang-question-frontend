@@ -145,8 +145,8 @@ public class SurveyService {
     /**
      * 根据登录状态和问卷ID获取问卷对象，并检查是否为创建者或管理员。
      *
-     * @param surveyId   问卷ID
-     * @param tokenValue 登录token
+     * @param surveyId    问卷ID
+     * @param tokenValue  登录token
      * @param creatorOnly 是否仅限创建者访问
      * @return 问卷对象
      * @throws DatabaseAccessException 如果数据库访问失败
@@ -186,14 +186,14 @@ public class SurveyService {
     /**
      * 更新问卷信息。
      *
-     * @param surveyId   问卷ID
-     * @param tokenValue 登录token
+     * @param surveyId      问卷ID
+     * @param tokenValue    登录token
      * @param loginRequired 是否需要登录
-     * @param isPublic   是否公开
-     * @param title      问卷标题
-     * @param description 问卷描述
-     * @param startTime  问卷开始时间
-     * @param endTime    问卷结束时间
+     * @param isPublic      是否公开
+     * @param title         问卷标题
+     * @param description   问卷描述
+     * @param startTime     问卷开始时间
+     * @param endTime       问卷结束时间
      * @throws SurveyServiceException  如果当前用户没有操作权限。
      * @throws DatabaseAccessException 如果数据库访问失败。
      * @throws UserServiceException    如果登录状态无效。
@@ -252,7 +252,7 @@ public class SurveyService {
      */
     public void checkSurvey(String surveyId, String tokenValue) throws DatabaseAccessException, SurveyServiceException, UserServiceException {
         var user = userService.getRequiredUser(tokenValue); // 获取当前登录用户
-        if(user.getRole() != UserRole.Admin)
+        if (user.getRole() != UserRole.Admin)
             throw new SurveyServiceException("当前用户不是管理员，无法审核问卷。"); // 无权限审核
 
         var survey = getRequiredSurvey(surveyId);
@@ -322,5 +322,15 @@ public class SurveyService {
             printer.shortPrintException(e);
             throw new DatabaseAccessException(e);
         }
+    }
+
+    /**
+     * 根据token获取该用户所填写过的所有问卷。
+     *
+     * @param token 用户token。
+     * @return 填写过的问卷对象列表。
+     */
+    public List<Survey> getFilledSurveys(String token) throws SurveyServiceException {
+        throw new SurveyServiceException("暂未实现");
     }
 }
