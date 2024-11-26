@@ -25,5 +25,8 @@ public class Response {
     private long userId;
 
     @Column(nullable = false)
+    private boolean isSubmitted;
+
+    @Column(nullable = true)
     private ZonedDateTime submittedAt;
 }

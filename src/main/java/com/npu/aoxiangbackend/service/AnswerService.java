@@ -34,26 +34,26 @@ public class AnswerService {
         this.surveyService = surveyService;
     }
 
-    /**
-     * 使用用户token和问卷ID获取该用户对某个问卷的答卷下的所有回答。
-     *
-     * @param tokenValue 用户token值。
-     * @param surveyId   问卷ID。
-     * @return 该用户对问卷的所有答卷列表。
-     * @throws UserServiceException     当token校验失败时抛出。
-     * @throws DatabaseAccessException  当数据库访问失败时抛出。
-     * @throws ResponseServiceException 当给定问卷不存在或问卷不由该用户创建时抛出。
-     */
-    public List<Answer> getAnswersBySurveyId(String tokenValue, String surveyId) throws UserServiceException, DatabaseAccessException, ResponseServiceException {
-        var userId = userService.checkAndGetUserId(tokenValue);
-        Response response = responseService.getResponsesByUserIdAndSurveyId(userId, surveyId);
-        try {
-            return answerDao.findAnswersByResponseId(response.getId());
-        } catch (Exception e) {
-            printer.shortPrintException(e);
-            throw new DatabaseAccessException(e);
-        }
-    }
+//    /**
+//     * 使用用户token和问卷ID获取该用户对某个问卷的答卷下的所有回答。
+//     *
+//     * @param tokenValue 用户token值。
+//     * @param surveyId   问卷ID。
+//     * @return 该用户对问卷的所有答卷列表。
+//     * @throws UserServiceException     当token校验失败时抛出。
+//     * @throws DatabaseAccessException  当数据库访问失败时抛出。
+//     * @throws ResponseServiceException 当给定问卷不存在或问卷不由该用户创建时抛出。
+//     */
+//    public List<Answer> getAnswersByUserAndSurveyId(String tokenValue, String surveyId) throws UserServiceException, DatabaseAccessException, ResponseServiceException {
+//        var userId = userService.checkAndGetUserId(tokenValue);
+//        List<Response> responses = responseService.getResponsesByUserIdAndSurveyId(userId, surveyId);
+//        try {
+//            return answerDao.findAnswersByResponseId(response.getId());
+//        } catch (Exception e) {
+//            printer.shortPrintException(e);
+//            throw new DatabaseAccessException(e);
+//        }
+//    }
 
     public List<Answer> getAnswersByQuestionId(long questionId, String tokenValue) throws UserServiceException, QuestionServiceException, DatabaseAccessException, SurveyServiceException, AnswerServiceException {
         var user = userService.getRequiredUser(tokenValue);
@@ -130,7 +130,7 @@ public class AnswerService {
         }
 
         if (answerOptional.isEmpty()) {
-            throw new AnswerServiceException(String.format("该答卷不存在：%s", answerId));
+            throw new AnswerServiceException(String.format("该答案不存在：%s", answerId));
         }
         return answerOptional.get();
     }
@@ -139,13 +139,13 @@ public class AnswerService {
         var userId = userService.checkAndGetUserId(tokenValue);
         var answer = getRequiredAnswer(answerId);
         if (!responseService.canViewResponse(answer.getResponseId(), tokenValue)) {
-            throw new AnswerServiceException("你没有访问该回答所属答卷的权限。");
+            throw new AnswerServiceException("你没有访问该答案所属答卷的权限。");
         }
         return answer;
     }
 
     /**
-     * 检查当前用户是否有权限查看答卷。
+     * 检查当前用户是否有权限查看答案。
      *
      * @param tokenValue 用户token值。
      * @param answerId   答案ID。

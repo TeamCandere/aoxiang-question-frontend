@@ -20,17 +20,21 @@
 <div id="app" class="container my-5">
     <!-- 页面标题 -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3>测试问卷</h3>
+        <h3>{{survey?.title||'问卷标题'}}</h3>
         <button class="btn btn-success">导出表单</button>
     </div>
 
     <!-- 切换栏 -->
     <ul class="nav nav-tabs">
         <li class="nav-item">
-            <button class="nav-link active" id="data-statistics-tab" data-bs-toggle="tab" data-bs-target="#data-statistics">数据统计</button>
+            <button class="nav-link active" id="data-statistics-tab" data-bs-toggle="tab"
+                    data-bs-target="#data-statistics">数据统计
+            </button>
         </li>
         <li class="nav-item">
-            <button class="nav-link" id="response-details-tab" data-bs-toggle="tab" data-bs-target="#response-details">答卷详情</button>
+            <button class="nav-link" id="response-details-tab" data-bs-toggle="tab" data-bs-target="#response-details">
+                答卷详情
+            </button>
         </li>
     </ul>
 
@@ -51,9 +55,9 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(answer, i) in question.data" :key="i">
+                    <tr v-for="(answer, i) in question.answers" :key="i">
                         <td>{{ i + 1 }}</td>
-                        <td>{{ answer }}</td>
+                        <td>{{ answer.content }}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -70,6 +74,10 @@
     </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.12/vue.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <!-- 引入 Bootstrap JS 和 Vue.js -->
 <script src="https://unpkg.com/vue@3.2.47/dist/vue.global.js"></script>
 <script src="<c:url value="/static/js/bootstrap.bundle.js"/>"></script>
@@ -109,8 +117,60 @@
                             title: '邮箱地址',
                             data: ['example1@example.com', 'example2@example.com']
                         }
-                    ]
+                    ],
+                    survey: null,
+                    token: localStorage.getItem("token") // 从 localStorage 中获取 token
                 };
+            },
+            mounted() {
+                if (this.token) {
+                    this.fetchSurveyInfo(this.token);
+                }
+            },
+            methods: {
+                fetchSurveyInfo(token) {
+                    axios.post('${pageContext.request.contextPath}/api/survey/${param.surveyId}', "token=" + token)
+                        .then(response => {
+                            if (response.data.code === 200) {
+                                this.survey = response.data.data;
+                                this.fetchQuestions(this.survey.id, this.token);
+                            } else {
+                                console.error('Failed to fetch survey info:', response.data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching survey info:', error)
+                        });
+                },
+                fetchQuestions(surveyId, token) {
+                    axios.post('${pageContext.request.contextPath}/api/question/all', "token=" + token + "&surveyId=" + surveyId)
+                        .then(response => {
+                            if (response.data.code === 200) {
+                                this.questions = response.data.data;
+                                for (const question of this.questions) {
+                                    this.fetchAnswers(question, this.token);
+                                }
+                            } else {
+                                console.error('Failed to fetch survey info:', response.data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching questions of survey:', error)
+                        });
+                },
+                fetchAnswers(question, token) {
+                    axios.post('${pageContext.request.contextPath}/api/answer/all', "token=" + token + "&questionId=" + question.id)
+                        .then(response => {
+                            if (response.data.code === 200) {
+                                question.answers = response.data.data;
+                            } else {
+                                console.error('Failed to fetch answers:', response.data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching answers of question:', error)
+                        });
+                }
             }
         });
 
