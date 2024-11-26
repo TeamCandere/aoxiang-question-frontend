@@ -119,7 +119,7 @@ public class SurveyController {
     @RequestMapping(value = "/edit/{surveyId}", method = {RequestMethod.POST, RequestMethod.GET})
     public SaResult editSurvey(@PathVariable String surveyId, @RequestBody EditSurveyRequest req) {
         try {
-            surveyService.editSurvey(surveyId, req.getTitle(),req.getDescription(),req.getStartTime(),req.getEndTime(),req.getToken());
+            surveyService.editSurvey(surveyId, req.getTitle(), req.getDescription(), req.getStartTime(), req.getEndTime(), req.getToken());
             return SaResult.ok("成功编辑问卷。");
         } catch (SurveyServiceException | UserServiceException | DatabaseAccessException e) {
             return SaResult.error(e.getMessage());
@@ -136,16 +136,13 @@ public class SurveyController {
      */
     @RequestMapping(value = "/share/{surveyId}", method = {RequestMethod.GET, RequestMethod.POST})
     public SaResult shareSurvey(HttpServletRequest request, @PathVariable String surveyId, @RequestParam(required = true) String token) {
-        try {
-            boolean canView = surveyService.canViewSurvey(surveyId, token);
-            if (!canView) {
-                return SaResult.error(String.format("不存在ID为 %s 的问卷，或者你没有它的访问权限。", surveyId));
-            }
-            String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/views/survey/survey_fill.jsp?surveyId="+ surveyId;
-            return SaResult.ok().setData(url);
-        } catch (DatabaseAccessException e) {
-            return SaResult.error(e.getMessage());
-        }
+
+//            boolean canView = surveyService.canViewSurvey(surveyId, token);
+//            if (!canView) {
+//                return SaResult.error(String.format("不存在ID为 %s 的问卷，或者你没有它的访问权限。", surveyId));
+//            }
+        String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/views/survey/survey_fill.jsp?surveyId=" + surveyId;
+        return SaResult.ok().setData(url);
     }
 
 }
