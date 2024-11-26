@@ -98,7 +98,7 @@
                         </ul>
                     </div>
                     <div class="card-footer text-muted small p-1">创建于: {{ survey.createdAt }}</div>
-                    <a class="btn-primary" :href="survey.shareLink" target="_blank">分享问卷</a>
+                    <a class="btn-primary" :href="survey.shareLink" target="_blank">问卷链接</a>
                 </div>
             </div>
         </div>
