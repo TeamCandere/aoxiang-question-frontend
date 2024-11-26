@@ -65,6 +65,9 @@ public class ResponseService {
     public void submitResponse(String responseId, String tokenValue) throws ResponseServiceException, DatabaseAccessException, UserServiceException {
         var response = getRequiredResponse(responseId);
         var user = userService.getRequiredUser(tokenValue);
+        if(response.isSubmitted())
+            throw new ResponseServiceException("该答卷已经提交。");
+
         if (response.getUserId() != user.getId()) {
             throw new ResponseServiceException("只有用户本人才能提交答卷。");
         }
@@ -72,6 +75,7 @@ public class ResponseService {
         if (questionService.getUnfilledQuestionsByResponseId(responseId).stream().anyMatch(Question::isRequired)) {
             throw new ResponseServiceException("存在必填问题没有填写。");
         }
+
         response.setSubmitted(true);
         response.setSubmittedAt(ZonedDateTime.now());
         responseDao.updateResponse(response);

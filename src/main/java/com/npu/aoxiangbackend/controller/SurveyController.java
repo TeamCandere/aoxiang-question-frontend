@@ -6,6 +6,7 @@ import com.npu.aoxiangbackend.exception.business.SurveyServiceException;
 import com.npu.aoxiangbackend.exception.business.UserServiceException;
 import com.npu.aoxiangbackend.exception.internal.DatabaseAccessException;
 import com.npu.aoxiangbackend.model.Survey;
+import com.npu.aoxiangbackend.protocol.EditSurveyRequest;
 import com.npu.aoxiangbackend.service.SurveyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -110,6 +111,16 @@ public class SurveyController {
         try {
             surveyService.checkSurvey(surveyId, token);
             return SaResult.ok("成功审核问卷。");
+        } catch (SurveyServiceException | UserServiceException | DatabaseAccessException e) {
+            return SaResult.error(e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "/edit/{surveyId}", method = {RequestMethod.POST, RequestMethod.GET})
+    public SaResult editSurvey(@PathVariable String surveyId, @RequestBody EditSurveyRequest req) {
+        try {
+            surveyService.editSurvey(surveyId, req.getTitle(),req.getDescription(),req.getStartTime(),req.getEndTime(),req.getToken());
+            return SaResult.ok("成功编辑问卷。");
         } catch (SurveyServiceException | UserServiceException | DatabaseAccessException e) {
             return SaResult.error(e.getMessage());
         }

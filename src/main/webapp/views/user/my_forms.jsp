@@ -38,7 +38,7 @@
 
     <!-- 新建问卷按钮 -->
     <div class="text-right mb-3">
-        <a href="/" class="btn btn-primary">创建新问卷</a>
+        <a href="${pageContext.request.contextPath}/views/survey/survey_edit_new.jsp" class="btn btn-primary">创建新问卷</a>
 <%--        jfoweijfowiejfoiqawejdfoijwadiofjoawiej--%>
     </div>
 
@@ -140,7 +140,7 @@
                 })
                     .then(response => {
                         if (response.data.code === 200) {
-                            this.surveys = response.data.data;
+                            this.createdSurveys = response.data.data;
                         } else {
                             console.error('Failed to fetch surveys:', response.data.message);
                         }
@@ -155,7 +155,7 @@
                 })
                     .then(response => {
                         if (response.data.code === 200) {
-                            this.surveys = response.data.data;
+                            this.filledSurveys = response.data.data;
                         } else {
                             console.error('Failed to fetch surveys:', response.data.message);
                         }

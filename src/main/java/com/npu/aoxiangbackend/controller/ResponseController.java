@@ -56,7 +56,17 @@ public class ResponseController {
     public SaResult deleteResponse(@PathVariable String responseId, @RequestParam String token) {
         try {
             responseService.deleteResponse(responseId, token);
-            return SaResult.ok("成功删除响应。");
+            return SaResult.ok("成功删除答卷。");
+        } catch (BusinessException | DatabaseAccessException e) {
+            return SaResult.error(e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "/submit/{responseId}", method = {RequestMethod.GET, RequestMethod.POST})
+    public SaResult submitResponse(@PathVariable String responseId, @RequestParam(required = true) String token) {
+        try {
+            responseService.submitResponse(responseId, token);
+            return SaResult.ok("成功提交答卷。");
         } catch (BusinessException | DatabaseAccessException e) {
             return SaResult.error(e.getMessage());
         }

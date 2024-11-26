@@ -1,8 +1,10 @@
 package com.npu.aoxiangbackend.controller;
 
 import cn.dev33.satoken.util.SaResult;
+import com.npu.aoxiangbackend.exception.business.BusinessException;
 import com.npu.aoxiangbackend.exception.business.QuestionServiceException;
 import com.npu.aoxiangbackend.exception.internal.DatabaseAccessException;
+import com.npu.aoxiangbackend.protocol.EditQuestionRequest;
 import com.npu.aoxiangbackend.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +43,15 @@ public class QuestionController {
         try {
             return SaResult.ok("成功创建问题").setData(questionService.createQuestion(surveyId, token));
         } catch (QuestionServiceException | DatabaseAccessException e) {
+            return SaResult.error(e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "/edit", method = {RequestMethod.GET, RequestMethod.POST})
+    public SaResult editQuestion(@RequestBody EditQuestionRequest request) {
+        try {
+            return SaResult.ok("成功编辑问题").setData(questionService.editQuestion(request.getQuestionId(), request.getToken(), request.getContent()));
+        } catch (BusinessException | DatabaseAccessException e) {
             return SaResult.error(e.getMessage());
         }
     }

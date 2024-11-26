@@ -78,6 +78,21 @@ public class QuestionService {
         }
     }
 
+    public long editQuestion(long questionId, String tokenValue, String content) throws DatabaseAccessException, QuestionServiceException {
+        if (!this.canViewQuestion(questionId, tokenValue)) {
+            throw new QuestionServiceException("你没有编辑该问卷的权限。");
+        }
+        Question question = getRequiredQuestion(questionId);
+        question.setContent(content);
+        try {
+            questionDao.updateQuestion(question);
+        } catch (Exception e) {
+            printer.shortPrintException(e);
+            throw new DatabaseAccessException(e);
+        }
+        return questionId;
+    }
+
     public void removeQuestion(long questionId, String tokenValue) throws DatabaseAccessException, QuestionServiceException {
         Question question = getRequiredQuestion(questionId);
         var surveyId = question.getSourceSurveyId();

@@ -294,6 +294,30 @@ public class SurveyService {
         }
     }
 
+    public void editSurvey(String surveyId,String title, String description, ZonedDateTime startTime, ZonedDateTime endTime, String tokenValue) throws DatabaseAccessException, SurveyServiceException, UserServiceException {
+        var user = userService.getRequiredUser(tokenValue);
+        var survey = this.getRequiredSurvey(surveyId);
+
+        if(survey.getCreatorId() != user.getId()) {
+            throw new SurveyServiceException("只有创建者能够编辑问卷。");
+        }
+
+        if (survey.isSubmitted()) {
+            throw new SurveyServiceException("该问卷已经提交。"); // 问卷未提交
+        }
+
+        survey.setTitle(title);
+        survey.setDescription(description);
+        survey.setStartTime(startTime);
+        survey.setEndTime(endTime);
+        try {
+            surveyDao.updateSurvey(survey);
+        }catch (Exception e){
+            throw new DatabaseAccessException(e);
+        }
+
+    }
+
     /**
      * 检查当前用户是否有权限查看问卷。
      *
