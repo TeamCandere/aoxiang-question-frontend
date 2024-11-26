@@ -57,7 +57,7 @@
             <label for="endDate">收集截止日期：</label>
             <input type="date" v-model="endDate" id="endDate" name="endDate" required class="form-control">
         </div>
-        <button type="submit" class="btn btn-primary" style="width: 65%;">保存设置</button>
+<%--        <button type="submit" class="btn btn-primary" style="width: 65%;">保存设置</button>--%>
     </div>
 
 
@@ -93,7 +93,7 @@
                 <!--文本类型问题-->
                 <div>
                     <label :for="'input-' + index">回答区域:</label>
-                    <input type="text" class="form-control" :id="'input-' + index"
+                    <input readonly type="text" class="form-control" :id="'input-' + index"
                            placeholder="请输入你的答案">
                 </div>
 
