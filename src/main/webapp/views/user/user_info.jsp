@@ -157,10 +157,12 @@
             },
             submitForm() {
                 axios.post('${ctx}/api/user/modify', {
-                    params: {
-                        token: this.token
-                    },
-                    newData: this.newData
+                    displayName: this.newData.displayName,
+                    oldPassword: this.newData.oldPassword,
+                    newPassword: this.newData.newPassword,
+                    email: this.newData.email,
+                    phoneNumber: this.newData.phone,
+                    token: this.token
                 })
                     .then(response => {
                             if (response.data.code === 200) {
