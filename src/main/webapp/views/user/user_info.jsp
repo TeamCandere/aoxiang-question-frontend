@@ -127,6 +127,7 @@
     const userInfoApp = Vue.createApp({
         data() {
             return {
+                token: localStorage.getItem("token"),
                 userData: null,
                 newData: {
                     displayName: '',
