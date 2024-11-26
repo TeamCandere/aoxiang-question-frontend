@@ -78,11 +78,15 @@
                 nickname: '',
                 avatarUrl: 'https://via.placeholder.com/40',
                 token: localStorage.getItem("token") // 从 localStorage 中获取 token
+                haveTurnToLogin: true
             };
         },
         mounted() {
             if (this.token) {
                 this.fetchUserProfile(this.token);
+            }
+            if(!this.isLoggedIn) {
+                window.location.href='${pageContext.request.contextPath}/views/auth/login.jsp';
             }
         },
         methods: {
@@ -96,7 +100,8 @@
                             this.username = user.username;
                             this.nickname = user.displayName; // 如果有昵称则使用昵称，否则使用用户名
                             this.avatarUrl = user.avatarUrl || 'https://via.placeholder.com/40'; // 设置用户头像
-                        } else {
+                        } else if(this.haveTurnToLogin===true){
+                            this.haveTurnToLogin = false;
                             console.error('Failed to fetch user profile:', response.data.message);
                         }
                     })
