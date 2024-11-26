@@ -242,6 +242,37 @@ public class SurveyService {
     }
 
     /**
+     * 以指定登录状态（必须为管理员）尝试审核一个问卷，
+     *
+     * @param surveyId   问卷ID。
+     * @param tokenValue 登录token。
+     * @throws DatabaseAccessException 如果数据库访问失败。
+     * @throws SurveyServiceException  如果当前用户没有操作权限。
+     * @throws UserServiceException    如果登录状态无效。
+     */
+    public void checkSurvey(String surveyId, String tokenValue) throws DatabaseAccessException, SurveyServiceException, UserServiceException {
+        var user = userService.getRequiredUser(tokenValue); // 获取当前登录用户
+        if(user.getRole() != UserRole.Admin)
+            throw new SurveyServiceException("当前用户不是管理员，无法审核问卷。"); // 无权限审核
+
+        var survey = getRequiredSurvey(surveyId);
+        if (!survey.isSubmitted()) {
+            throw new SurveyServiceException("该问卷尚未提交。"); // 问卷未提交
+        }
+        if (survey.isChecked()) {
+            throw new SurveyServiceException("该问卷已经审核。"); // 问卷已审核
+        }
+        survey.setChecked(true); // 设置问卷为已审核
+        survey.setCheckerId(user.getId()); // 设置审核者ID
+        try {
+            surveyDao.updateSurvey(survey); // 更新问卷信息
+        } catch (Exception e) {
+            printer.shortPrintException(e); // 打印异常信息
+            throw new DatabaseAccessException(e); // 数据库访问异常
+        }
+    }
+
+    /**
      * 检查当前用户是否有权限查看问卷。
      *
      * @param surveyId   问卷ID
@@ -272,6 +303,24 @@ public class SurveyService {
             return true; // 有权限编辑
         } catch (SurveyServiceException | UserServiceException e) {
             return false; // 无权限编辑
+        }
+    }
+
+    public long getTotalSurveys() throws DatabaseAccessException {
+        try {
+            return surveyDao.getTotalSurveys();
+        } catch (Exception e) {
+            printer.shortPrintException(e);
+            throw new DatabaseAccessException(e);
+        }
+    }
+
+    public long getApprovedSurveys() throws DatabaseAccessException {
+        try {
+            return surveyDao.getApprovedSurveys();
+        } catch (Exception e) {
+            printer.shortPrintException(e);
+            throw new DatabaseAccessException(e);
         }
     }
 }
