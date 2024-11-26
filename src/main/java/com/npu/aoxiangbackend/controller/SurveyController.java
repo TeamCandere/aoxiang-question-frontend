@@ -6,6 +6,7 @@ import com.npu.aoxiangbackend.exception.business.SurveyServiceException;
 import com.npu.aoxiangbackend.exception.business.UserServiceException;
 import com.npu.aoxiangbackend.exception.internal.DatabaseAccessException;
 import com.npu.aoxiangbackend.model.Survey;
+import com.npu.aoxiangbackend.protocol.EditSurveyRequest;
 import com.npu.aoxiangbackend.service.SurveyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -115,6 +116,16 @@ public class SurveyController {
         }
     }
 
+    @RequestMapping(value = "/edit/{surveyId}", method = {RequestMethod.POST, RequestMethod.GET})
+    public SaResult editSurvey(@PathVariable String surveyId, @RequestBody EditSurveyRequest req) {
+        try {
+            surveyService.editSurvey(surveyId, req.getTitle(),req.getDescription(),req.getStartTime(),req.getEndTime(),req.getToken());
+            return SaResult.ok("成功编辑问卷。");
+        } catch (SurveyServiceException | UserServiceException | DatabaseAccessException e) {
+            return SaResult.error(e.getMessage());
+        }
+    }
+
     /**
      * 获取问卷分享链接。
      *
@@ -130,7 +141,7 @@ public class SurveyController {
             if (!canView) {
                 return SaResult.error(String.format("不存在ID为 %s 的问卷，或者你没有它的访问权限。", surveyId));
             }
-            String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/api/survey/" + surveyId + "?token=" + token;
+            String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/views/survey/survey_fill.jsp?surveyId="+ surveyId;
             return SaResult.ok().setData(url);
         } catch (DatabaseAccessException e) {
             return SaResult.error(e.getMessage());

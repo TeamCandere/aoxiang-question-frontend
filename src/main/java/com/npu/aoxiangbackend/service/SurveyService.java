@@ -84,8 +84,8 @@ public class SurveyService {
         survey.setSubmitted(false); // 问卷未提交
         survey.setChecked(false); // 问卷未审核
         survey.setCheckerId(null); // 无审核者
-        survey.setLoginRequired(false); // 不需要登录
-        survey.setPublic(false); // 问卷不公开
+        survey.setLoginRequired(true); // 不需要登录
+        survey.setPublic(true); // 问卷不公开
         survey.setTitle("新建问卷"); // 默认标题
         survey.setDescription("新建问卷"); // 默认描述
         survey.setTotalResponses(0); // 总响应数为0
@@ -292,6 +292,30 @@ public class SurveyService {
             printer.shortPrintException(e); // 打印异常信息
             throw new DatabaseAccessException(e); // 数据库访问异常
         }
+    }
+
+    public void editSurvey(String surveyId,String title, String description, ZonedDateTime startTime, ZonedDateTime endTime, String tokenValue) throws DatabaseAccessException, SurveyServiceException, UserServiceException {
+        var user = userService.getRequiredUser(tokenValue);
+        var survey = this.getRequiredSurvey(surveyId);
+
+        if(survey.getCreatorId() != user.getId()) {
+            throw new SurveyServiceException("只有创建者能够编辑问卷。");
+        }
+
+        if (survey.isSubmitted()) {
+            throw new SurveyServiceException("该问卷已经提交。"); // 问卷未提交
+        }
+
+        survey.setTitle(title);
+        survey.setDescription(description);
+        survey.setStartTime(startTime);
+        survey.setEndTime(endTime);
+        try {
+            surveyDao.updateSurvey(survey);
+        }catch (Exception e){
+            throw new DatabaseAccessException(e);
+        }
+
     }
 
     /**

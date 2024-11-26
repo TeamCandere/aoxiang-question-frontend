@@ -62,7 +62,7 @@ public class QuestionDao implements IQuestionDao {
     @Override
     public List<Question> findUnfilledQuestionsByResponseId(String responseId) {
         try (Session session = sessionFactory.openSession()) {
-            Query<Question> query = session.createQuery("from Question where id not in (select questionId from Answer where responseId = :responseId) ");
+            Query<Question> query = session.createQuery("from Question where id not in (select questionId from Answer where responseId = :responseId) and sourceSurveyId in ( select surveyId from Response where id = :responseId)");
             query.setParameter("responseId", responseId);
             return query.list();
         }

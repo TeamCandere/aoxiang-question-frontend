@@ -24,7 +24,7 @@
         }
 
         .centered-form {
-            width: 80%;
+            width: 50%;
             max-width: 1200px;
             padding: 40px;
             border-radius: 15px;
@@ -85,6 +85,7 @@
                 </div>
 
                 <!-- 分享链接 -->
+                <!-- todo -->
                 <div class="input-group">
                     <span class="input-group-text">分享链接</span>
                     <input type="text" class="liainjie form-control" value="https://f.wps.cn/g/uN4WA0Bo" aria-describedby="button-addon2">
