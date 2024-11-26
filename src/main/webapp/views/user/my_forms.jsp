@@ -184,7 +184,7 @@
                                     .then(response => {
                                         if (response.data.code === 200) {
                                             myResp.survey = response.data.data;
-                                            myResp.survey.fillLink = "/views/survey/survey_fill.jsp?surveyId=" + myResp.survey.id;
+                                            myResp.survey.fillLink = "${pageContext.request.contextPath}/views/survey/survey_fill.jsp?surveyId=" + myResp.survey.id;
                                         } else {
                                             console.error('Failed to fetch surveys:', response.data.message);
                                         }
