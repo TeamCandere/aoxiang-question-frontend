@@ -72,6 +72,8 @@
     </style>
 </head>
 <body>
+<!-- 页脚 -->
+<jsp:include page="../common/banner.jsp" />
 <div id="app" class="container mt-5">
 
     <div class="login">
@@ -112,6 +114,8 @@
         </div>
     </div>
 </div>
+<!-- 页脚 -->
+<jsp:include page="../common/footer.jsp" />
 
 <!-- 引入 Vue.js 和 Axios -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.12/vue.global.min.js"></script>

@@ -104,4 +104,23 @@ public class SurveyDao implements ISurveyDao {
             return query.getSingleResult();
         }
     }
+
+    @Override
+    public List<Survey> getFilledSurveys(long userId) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            var query = session.createQuery(" from Survey where id in (select surveyId from Response where userId = :userId)", Survey.class);
+            query.setParameter("userId", userId);
+            return query.list();
+        }
+    }
+
+    @Override
+    public List<Survey> listAllSurveys() {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            var query = session.createQuery(" from Survey", Survey.class);
+            return query.list();
+        }
+    }
 }
