@@ -1,6 +1,7 @@
 package com.npu.aoxiangbackend.controller;
 
 import cn.dev33.satoken.util.SaResult;
+import com.npu.aoxiangbackend.exception.business.BusinessException;
 import com.npu.aoxiangbackend.exception.business.SurveyServiceException;
 import com.npu.aoxiangbackend.exception.business.UserServiceException;
 import com.npu.aoxiangbackend.exception.internal.DatabaseAccessException;
@@ -9,6 +10,7 @@ import com.npu.aoxiangbackend.service.SurveyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -22,12 +24,44 @@ public class SurveyController {
         this.surveyService = surveyService;
     }
 
+    /**
+     * 根据token获取该用户创建的所有问卷。
+     *
+     * @param token 当前用户token。
+     * @return json。
+     */
     @GetMapping("/all")
     public SaResult listUserSurveys(@RequestParam(required = true) String token) {
+        try {
+            List<Survey> surveys = surveyService.getSurveysByToken(token);
+            return SaResult.ok().setData(surveys);
+        } catch (UserServiceException | DatabaseAccessException e) {
+            return SaResult.error(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有用户创建的所有问卷。
+     *
+     * @param token 管理员token。
+     * @return json。
+     */
+    @GetMapping("/all-admin")
+    public SaResult listAllSurveys(@RequestParam(required = true) String token) {
+        try {
+            List<Survey> surveys = surveyService.getAllSurveys(token);
+            return SaResult.ok().setData(surveys);
+        } catch (UserServiceException | DatabaseAccessException | SurveyServiceException e) {
+            return SaResult.error(e.getMessage());
+        }
+    }
+
+    @GetMapping("/filled")
+    public SaResult listFilledSurveys(@RequestParam(required = true) String token) {
         List<Survey> surveys = null;
         try {
-            surveys = surveyService.getSurveysByToken(token);
-        } catch (UserServiceException | DatabaseAccessException e) {
+            surveys = surveyService.getFilledSurveys(token);
+        } catch (BusinessException | DatabaseAccessException e) {
             return SaResult.error(e.getMessage());
         }
         return SaResult.ok().setData(surveys);
@@ -77,6 +111,28 @@ public class SurveyController {
             surveyService.checkSurvey(surveyId, token);
             return SaResult.ok("成功审核问卷。");
         } catch (SurveyServiceException | UserServiceException | DatabaseAccessException e) {
+            return SaResult.error(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取问卷分享链接。
+     *
+     * @param request  Servlet请求。
+     * @param surveyId 问卷ID。
+     * @param token    用户token。
+     * @return json。
+     */
+    @RequestMapping(value = "/share/{surveyId}", method = {RequestMethod.GET, RequestMethod.POST})
+    public SaResult shareSurvey(HttpServletRequest request, @PathVariable String surveyId, @RequestParam(required = true) String token) {
+        try {
+            boolean canView = surveyService.canViewSurvey(surveyId, token);
+            if (!canView) {
+                return SaResult.error(String.format("不存在ID为 %s 的问卷，或者你没有它的访问权限。", surveyId));
+            }
+            String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/api/survey/" + surveyId + "?token=" + token;
+            return SaResult.ok().setData(url);
+        } catch (DatabaseAccessException e) {
             return SaResult.error(e.getMessage());
         }
     }
