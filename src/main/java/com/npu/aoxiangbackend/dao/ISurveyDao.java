@@ -2,6 +2,7 @@ package com.npu.aoxiangbackend.dao;
 
 import com.npu.aoxiangbackend.model.Survey;
 import com.npu.aoxiangbackend.model.User;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +15,7 @@ public interface ISurveyDao {
 
     /**
      * 将指定的问卷对象添加到数据库，返回自动创建的主键uuid。
+     *
      * @param survey 问卷对象。
      * @return 问卷的uuid。
      */
@@ -26,4 +28,8 @@ public interface ISurveyDao {
     public long getTotalSurveys();
 
     public long getApprovedSurveys();
+
+    public List<Survey> getFilledSurveys(long userId);
+
+    public List<Survey> listAllSurveys();
 }

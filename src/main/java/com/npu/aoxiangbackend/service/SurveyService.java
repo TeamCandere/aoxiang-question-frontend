@@ -47,6 +47,28 @@ public class SurveyService {
     }
 
     /**
+     * 获取所有用户创建的所有问卷，只有管理员能访问。
+     *
+     * @param tokenValue 管理员token。
+     * @return 所有问卷列表。
+     * @throws SurveyServiceException  如果当前用户非管理员。
+     * @throws UserServiceException    如果token无效。
+     * @throws DatabaseAccessException 如果数据库访问失败。
+     */
+    public List<Survey> getAllSurveys(String tokenValue) throws SurveyServiceException, UserServiceException, DatabaseAccessException {
+        var user = userService.getRequiredUser(tokenValue);
+        if (user.getRole() != UserRole.Admin) {
+            throw new SurveyServiceException("只有管理员能够查看所有问卷。");
+        }
+        try {
+            return surveyDao.listAllSurveys();
+        } catch (Exception e) {
+            printer.shortPrintException(e);
+            throw new DatabaseAccessException(e);
+        }
+    }
+
+    /**
      * 使用指定用户token在该用户名下创建一个问卷。
      *
      * @param tokenValue 用户token值。
@@ -330,7 +352,13 @@ public class SurveyService {
      * @param token 用户token。
      * @return 填写过的问卷对象列表。
      */
-    public List<Survey> getFilledSurveys(String token) throws SurveyServiceException {
-        throw new SurveyServiceException("暂未实现");
+    public List<Survey> getFilledSurveys(String token) throws SurveyServiceException, UserServiceException, DatabaseAccessException {
+        long userId = userService.checkAndGetUserId(token);
+        try {
+            return surveyDao.getFilledSurveys(userId);
+        } catch (Exception e) {
+            printer.shortPrintException(e);
+            throw new DatabaseAccessException(e);
+        }
     }
 }

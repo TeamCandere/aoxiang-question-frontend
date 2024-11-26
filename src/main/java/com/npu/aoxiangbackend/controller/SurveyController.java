@@ -23,15 +23,34 @@ public class SurveyController {
         this.surveyService = surveyService;
     }
 
+    /**
+     * 根据token获取该用户创建的所有问卷。
+     * @param token 当前用户token。
+     * @return json。
+     */
     @GetMapping("/all")
     public SaResult listUserSurveys(@RequestParam(required = true) String token) {
-        List<Survey> surveys = null;
         try {
-            surveys = surveyService.getSurveysByToken(token);
+            List<Survey> surveys = surveyService.getSurveysByToken(token);
+            return SaResult.ok().setData(surveys);
         } catch (UserServiceException | DatabaseAccessException e) {
             return SaResult.error(e.getMessage());
         }
-        return SaResult.ok().setData(surveys);
+    }
+
+    /**
+     * 获取所有用户创建的所有问卷。
+     * @param token 管理员token。
+     * @return json。
+     */
+    @GetMapping("/all-admin")
+    public SaResult listAllSurveys(@RequestParam(required = true) String token) {
+        try {
+            List<Survey> surveys = surveyService.getAllSurveys(token);
+            return SaResult.ok().setData(surveys);
+        } catch (UserServiceException | DatabaseAccessException | SurveyServiceException e) {
+            return SaResult.error(e.getMessage());
+        }
     }
 
     @GetMapping("/filled")
@@ -39,7 +58,7 @@ public class SurveyController {
         List<Survey> surveys = null;
         try {
             surveys = surveyService.getFilledSurveys(token);
-        } catch (BusinessException e) {
+        } catch (BusinessException | DatabaseAccessException e) {
             return SaResult.error(e.getMessage());
         }
         return SaResult.ok().setData(surveys);
