@@ -1,4 +1,6 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +10,8 @@
     <!-- 引入 Bootstrap 样式 -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/bootstrap.min.css">
     <!-- 引入 Vue -->
-    <script src="${pageContext.request.contextPath}/static/js/vue.global.js"></script>
+    <script src="${ctx}/static/js/vue.global.js"></script>
+    <script src="<c:url value="/static/js/axios.min.js"/>"></script>
 </head>
 <body style="margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f8f9fa;">
 <div id="app" class="container" style="max-width: 800px; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); margin:5%;">
@@ -66,17 +69,11 @@
         data() {
             return {
                 survey: {
-                    title: '用户满意度调查问卷', // 示例标题
-                    description: '请根据您的实际情况填写以下问卷内容。'
+                    title: '',
+                    description: '',
+                    questions: []
                 },
-                questions: [
-                    { type: 'single-choice', title: '你的性别是？', value: '', options: ['男', '女'] },
-                    { type: 'multi-choice', title: '你喜欢的水果？', value: [], options: ['苹果', '香蕉', '橘子'] },
-                    { type: 'text-input', title: '请简单介绍你自己', value: '' },
-                    { type: 'phone-number', title: '请输入你的手机号', value: '' },
-                    { type: 'id-number', title: '请输入你的身份证号', value: '' },
-                    { type: 'email', title: '请输入你的邮箱', value: '' }
-                ]
+                token: localStorage.getItem("token") // 从 localStorage 中获取 token
             };
         },
         methods: {
@@ -100,32 +97,87 @@
             isValidEmail(value) {
                 return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
             },
-            submitForm() {
-                console.log('Description:', this.description);
-                console.log('Questions:', this.questions);
+            loadSurvey() {
+                // 获取 URL 中的 surveyId
+                const urlParams = new URLSearchParams(window.location.search);
+                const surveyId = urlParams.get('surveyId');
+                if (!surveyId) {
+                    alert('问卷 ID 不存在');
+                    return;
+                }
 
-                if (this.questions.some(q => q.type === 'phone-number' && !this.isValidPhoneNumber(q.value))) {
+                // 检查是否有 token
+                if (!this.token) {
+                    alert('未登录或登录已过期，请重新登录');
+                    window.location.href = `${ctx}/views/login.jsp`; // 跳转到登录页面
+                    return;
+                }
+
+                // 向后端请求问卷数据
+                axios.get(`${ctx}/api/survey/${surveyId}`, {
+                    params: {
+                        token: this.token // 将 token 作为参数传递
+                    }
+                })
+                    .then(response => {
+                        if (response.data.code === 200) {
+                            this.survey = response.data.data; // 加载问卷内容
+                        } else {
+                            alert('问卷加载失败：' + response.data.msg);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('加载问卷失败', error);
+                        alert('加载问卷失败，请稍后重试');
+                    });
+            },
+            submitForm() {
+                // 校验表单数据
+                if (this.survey.questions.some(q => q.type === 'phone-number' && !this.isValidPhoneNumber(q.value))) {
                     alert('请检查手机号题的格式是否正确');
                     return;
                 }
-
-                if (this.questions.some(q => q.type === 'id-number' && !this.isValidIdNumber(q.value))) {
+                if (this.survey.questions.some(q => q.type === 'id-number' && !this.isValidIdNumber(q.value))) {
                     alert('请检查身份证题的格式是否正确');
                     return;
                 }
-
-                if (this.questions.some(q => q.type === 'email' && !this.isValidEmail(q.value))) {
+                if (this.survey.questions.some(q => q.type === 'email' && !this.isValidEmail(q.value))) {
                     alert('请检查邮箱题的格式是否正确');
                     return;
                 }
-                alert('问卷提交成功！');
-                console.log('问卷结果:', this.questions);
+
+                // 提交表单数据
+                axios.post(`${ctx}/api/response/create`, {
+                    surveyId: this.survey.id,
+                    answers: this.survey.questions.map(q => ({
+                        questionId: q.id, // 假设每个问题有唯一 id
+                        value: q.value
+                    })),
+                    token: this.token // 提交时包含 token
+                })
+                    .then(response => {
+                        if (response.data.code === 200) {
+                            alert('问卷提交成功！');
+                            window.location.href = `${ctx}/views/user/user_home.jsp`; // 跳转到成功页面
+                        } else {
+                            alert('提交失败：' + response.data.msg);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('提交问卷失败', error);
+                        alert('提交问卷失败，请稍后重试');
+                    });
             }
+        },
+        mounted() {
+            // 页面加载完成后调用加载问卷的方法
+            this.loadSurvey();
         }
     });
 
     app.mount('#app');
 </script>
+
 
 <!-- 引入 Bootstrap 脚本 -->
 <script src="${pageContext.request.contextPath}/static/js/bootstrap.bundle.min.js"></script>
