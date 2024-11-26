@@ -22,7 +22,7 @@ public interface IResponseDao {
      * @param userId   用户的ID。
      * @return 可能为空的Response对象。
      */
-    Optional<Response> findResponseBySurveyIdAndUserId(String surveyId, long userId);
+    List<Response> findResponsesBySurveyIdAndUserId(String surveyId, long userId);
 
     /**
      * 根据调查ID查找所有Response对象。

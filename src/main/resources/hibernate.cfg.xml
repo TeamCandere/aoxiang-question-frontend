@@ -6,10 +6,10 @@
 <hibernate-configuration>
     <session-factory>
         <!--在这里配置PostgreSQL数据库URL，注意格式-->
-        <property name="connection.url">jdbc:postgresql://localhost:5432/aoxiang-question</property>
+        <property name="connection.url">jdbc:postgresql://localhost:9200/aoxiang-question</property>
         <property name="connection.driver_class">org.postgresql.Driver</property>
         <property name="connection.username">postgres</property>
-        <property name="connection.password">nico1026</property>
+        <property name="connection.password">rawgb773</property>
 
         <!--自动建立和更新表-->
         <property name="hbm2ddl.auto">update</property>
@@ -18,5 +18,7 @@
         <mapping class="com.npu.aoxiangbackend.model.User"/>
         <mapping class="com.npu.aoxiangbackend.model.Survey"/>
         <mapping class="com.npu.aoxiangbackend.model.Question"/>
+        <mapping class="com.npu.aoxiangbackend.model.Response"/>
+        <mapping class="com.npu.aoxiangbackend.model.Answer"/>
     </session-factory>
 </hibernate-configuration>

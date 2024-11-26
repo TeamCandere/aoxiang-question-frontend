@@ -14,6 +14,8 @@ public interface IQuestionDao {
 
     List<Question> findQuestionsBySurveyId(String surveyId);
 
+    List<Question> findUnfilledQuestionsByResponseId(String responseId);
+
     boolean deleteQuestion(long id);
 
     boolean updateQuestion(Question question);
