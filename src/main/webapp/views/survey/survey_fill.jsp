@@ -114,7 +114,7 @@
                 }
 
                 // 向后端请求问卷数据
-                axios.get(`${ctx}/api/survey/${surveyId}`, {
+                axios.get("${ctx}/api/survey/"+this.surveyId, {
                     params: {
                         token: this.token // 将 token 作为参数传递
                     }
