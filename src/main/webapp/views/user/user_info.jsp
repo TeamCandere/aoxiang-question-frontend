@@ -156,10 +156,6 @@
                     })
             },
             submitForm() {
-                if (this.userData.password !== this.newData.oldPassword) {
-                    alert('旧密码错误！');
-                    return;
-                }
                 axios.post('${ctx}/api/user/modify', {
                     params: {
                         token: this.token
