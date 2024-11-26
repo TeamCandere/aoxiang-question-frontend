@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
     <style>
         body{
-            background: url("./image.png");
+            background: url("${ctx}/static/img/image.png");
             background-size: cover;
 
         }
@@ -73,7 +73,7 @@
 </head>
 <body>
 <!-- 页脚 -->
-<jsp:include page="../common/banner.jsp" />
+<%--<jsp:include page="../common/banner.jsp" />--%>
 <div id="app" class="container mt-5">
 
     <div class="login">

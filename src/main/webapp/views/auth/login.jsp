@@ -80,7 +80,7 @@
 </head>
 <body>
 <!-- 顶部导航栏 (Banner) -->
-<jsp:include page="../common/banner.jsp" />
+<%--<jsp:include page="../common/banner.jsp" />--%>
 <div id="app" class="container mt-5">
     <div class="login">
         <div class="left"></div>
