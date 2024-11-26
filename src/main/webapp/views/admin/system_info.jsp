@@ -13,6 +13,12 @@
   <script src="${pageContext.request.contextPath}/static/js/vue.global.js"></script>
   <!-- 引入 Axios -->
   <script src="${pageContext.request.contextPath}/static/js/axios.min.js"></script>
+  <style>
+    .highlighted-data {
+      color: #FF5733; /* 显眼的颜色 */
+      font-weight: bold; /* 加粗字体 */
+    }
+  </style>
 </head>
 <body>
 <div class="container" id="infoApp" style="margin-top: 50px;">
@@ -25,7 +31,7 @@
       <div class="card text-white bg-primary h-100">
         <div class="card-body d-flex flex-column justify-content-center align-items-center">
           <h5 class="card-title mb-3">用户总数</h5>
-          <p class="card-text display-4">{{ statistics.totalUsers }} 用户</p>
+          <p class="card-text display-4"><span class="highlighted-data">{{ statistics.totalUsers }}</span> 用户</p>
         </div>
       </div>
     </div>
@@ -33,7 +39,7 @@
       <div class="card text-white bg-success h-100">
         <div class="card-body d-flex flex-column justify-content-center align-items-center">
           <h5 class="card-title mb-3">问卷总数</h5>
-          <p class="card-text display-4">{{ statistics.totalSurveys }} 问卷</p>
+          <p class="card-text display-4"><span class="highlighted-data">{{ statistics.totalSurveys }}</span> 问卷</p>
         </div>
       </div>
     </div>
@@ -41,7 +47,7 @@
       <div class="card text-white bg-info h-100">
         <div class="card-body d-flex flex-column justify-content-center align-items-center">
           <h5 class="card-title mb-3">审核通过问卷</h5>
-          <p class="card-text display-4">{{ statistics.approvedSurveys }} 问卷</p>
+          <p class="card-text display-4"><span class="highlighted-data">{{ statistics.approvedSurveys }}</span> 问卷</p>
         </div>
       </div>
     </div>
