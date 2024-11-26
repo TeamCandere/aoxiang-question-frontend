@@ -32,17 +32,17 @@ public class ResponseController {
         }
     }
 
-    @PostMapping("/create")
+    @RequestMapping(value = "/create", method = {RequestMethod.GET, RequestMethod.POST})
     public SaResult createResponse(@RequestParam(required = true) String surveyId, @RequestParam(required = true) String token) {
         try {
             String responseId = responseService.addResponse(surveyId, token);
-            return SaResult.ok("成功创建响应。").setData(responseId);
+            return SaResult.ok("成功创建答卷。").setData(responseId);
         } catch (UserServiceException | DatabaseAccessException e) {
             return SaResult.error(e.getMessage());
         }
     }
 
-    @GetMapping("/{responseId}")
+    @RequestMapping(value = "/{responseId}", method = {RequestMethod.GET, RequestMethod.POST})
     public SaResult getResponse(@PathVariable String responseId, @RequestParam String token) {
         try {
             Response response = responseService.accessResponseById(responseId, token);
