@@ -186,7 +186,9 @@
             }
         },
         mounted() {
-            this.fetchUserData();
+            if (this.token) {
+                this.fetchUserData();
+            }
         }
     });
 
