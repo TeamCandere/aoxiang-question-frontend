@@ -1,6 +1,7 @@
 ﻿<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="true" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -138,7 +139,7 @@
         },
         methods: {
             fetchUserData() {
-                axios.get('api/user/profile', {
+                axios.get('${ctx}/api/user/profile', {
                     params: {token: this.token}
                 })
                     .then(response => {
@@ -158,7 +159,7 @@
                     alert('旧密码错误！');
                     return;
                 }
-                axios.post('api/user/modify', {
+                axios.post('${ctx}/api/user/modify', {
                     params: {
                         token: this.token
                     },
