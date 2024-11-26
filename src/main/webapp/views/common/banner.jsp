@@ -18,7 +18,7 @@
 <body>
 
 <!-- Vue.js 实例 -->
-<div id="app">
+<div id="bannerApp">
     <!-- Banner -->
     <div class="banner d-flex justify-content-between align-items-center">
         <!-- 左侧：网站名和当前版块 -->
@@ -69,7 +69,7 @@
 
 <!-- Vue.js 代码 -->
 <script>
-    const app = Vue.createApp({
+    const bannerApp = Vue.createApp({
         data() {
             return {
                 isLoggedIn: false,
@@ -112,7 +112,7 @@
         }
     });
 
-    app.mount('#app');
+    bannerApp.mount('#bannerApp');
 </script>
 
 </body>

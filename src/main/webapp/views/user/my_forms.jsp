@@ -33,7 +33,7 @@
     <script src="${pageContext.request.contextPath}/static/js/axios.min.js"></script>
 </head>
 <body>
-<div class="container" id="surveyOverviewApp" style="margin-top: 50px;">
+<div class="container" id="myFormsApp" style="margin-top: 50px;">
     <h1 class="text-center mb-4">问卷概览</h1>
 
     <!-- 新建问卷按钮 -->
@@ -166,7 +166,6 @@
             }
         }
     });
-
     myFormsApp.mount('#myFormsApp');
 </script>
 </body>
