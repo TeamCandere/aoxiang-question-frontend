@@ -84,8 +84,10 @@
             },
             deleteUser(userId) {
                 if (confirm('确定要删除此用户吗？')) {
-                    axios.post('${pageContext.request.contextPath}/api/user/delete/' + userId, {
-                        token: this.token
+                    axios.get('${pageContext.request.contextPath}/api/user/delete/' + userId, {
+                        params: {
+                            token: this.token
+                        }
                     })
                         .then(response => {
                             if (response.data.code === 200) {

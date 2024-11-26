@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -87,7 +87,7 @@
         methods: {
             fetchSurveys() {
                 axios.get('${pageContext.request.contextPath}/api/survey/all', {
-                    params: { token: this.token }
+                    params: {token: this.token}
                 })
                     .then(response => {
                         if (response.data.code === 200) {
@@ -102,11 +102,11 @@
             },
             viewSurvey(surveyId) {
                 axios.get('${pageContext.request.contextPath}/api/survey/' + surveyId, {
-                    params: { token: this.token }
+                    params: {token: this.token}
                 })
                     .then(response => {
                         if (response.data.code === 200) {
-                            alert('查看问卷：'+ response.data.data.title);
+                            alert('查看问卷：' + response.data.data.title);
                             this.fetchSurveys(); // 刷新问卷列表
                         } else {
                             alert('查看失败: ' + response.data.message);
@@ -134,8 +134,10 @@
             },
             deleteSurvey(surveyId) {
                 if (confirm('确定要删除此问卷吗？')) {
-                    axios.post('${pageContext.request.contextPath}/api/survey/delete/' + surveyId, {
-                        token: this.token
+                    axios.get('${pageContext.request.contextPath}/api/survey/remove/' + surveyId, {
+                        params: {
+                            token: this.token
+                        }
                     })
                         .then(response => {
                             if (response.data.code === 200) {
