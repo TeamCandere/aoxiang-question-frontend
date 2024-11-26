@@ -11,8 +11,10 @@ import com.npu.aoxiangbackend.protocol.RegisterRequest;
 import com.npu.aoxiangbackend.util.ColoredPrintStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.ZonedDateTime;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.List;
 
@@ -181,6 +183,42 @@ public class UserService {
 
         try {
             return userDao.getUserCount();
+        } catch (Exception e) {
+            printer.shortPrintException(e);
+            throw new DatabaseAccessException(e);
+        }
+    }
+
+    /**
+     * 根据token编译当前用户的信息。
+     *
+     * @param displayName 新的显示名称，为null则不做更改。
+     * @param oldPassword 旧密码。
+     * @param newPassword 新密码。
+     * @param email       新的邮箱，为null则不做更改。
+     * @param phoneNumber 新的手机号，为null则不做更改。
+     * @param token       用户token。
+     * @throws UserServiceException    如果token验证失败、密码不正确。
+     * @throws DatabaseAccessException 如果数据库访问失败。
+     */
+    public void editUserProfile(String displayName, String oldPassword, String newPassword,
+                                String email, String phoneNumber, String token) throws UserServiceException, DatabaseAccessException {
+        var user = getRequiredUser(token);
+
+        //验证用户名和密码格式
+        throwOnInvalidRegister(user.getUsername(), newPassword);
+        if (!Objects.equals(user.getPassword(), oldPassword)) {
+            throw new UserServiceException("用户的旧密码不正确。");
+        }
+        if (displayName != null)
+            user.setDisplayName(displayName);
+        if (email != null)
+            user.setEmail(email);
+        if (phoneNumber != null)
+            user.setPhone(phoneNumber);
+
+        try {
+            userDao.updateUser(user);
         } catch (Exception e) {
             printer.shortPrintException(e);
             throw new DatabaseAccessException(e);
