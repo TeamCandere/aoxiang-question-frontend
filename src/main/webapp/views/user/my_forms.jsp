@@ -58,7 +58,8 @@
                             <li><strong>提交时间:</strong> {{ response.submittedAt || "尚未提交" }}</li>
                         </ul>
                     </div>
-                    <a class="btn-primary" v-show="!response.isSubmitted" href="this.getSurveyLink(response.survey.id)">继续回答</a>
+                    <a class="btn-primary" v-show="!response.isSubmitted"
+                       :href="response.survey.fillLink" target="_blank">继续回答</a>
                 </div>
             </div>
         </div>
@@ -97,6 +98,7 @@
                         </ul>
                     </div>
                     <div class="card-footer text-muted small p-1">创建于: {{ survey.createdAt }}</div>
+                    <a class="btn-primary" :href="survey.shareLink" target="_blank">分享问卷</a>
                 </div>
             </div>
         </div>
@@ -141,6 +143,23 @@
                     .then(response => {
                         if (response.data.code === 200) {
                             this.createdSurveys = response.data.data;
+                            for (const survey of this.createdSurveys) {
+                                axios.get('${pageContext.request.contextPath}/api/survey/share/' + survey.id, {
+                                    params: {
+                                        token: this.token
+                                    }
+                                })
+                                    .then(response => {
+                                        if (response.data.code === 200) {
+                                            survey.shareLink = response.data.data;
+                                        } else {
+                                            console.error('Failed to fetch share link:', response.data.message);
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Server internal error:', error);
+                                    });
+                            }
                         } else {
                             console.error('Failed to fetch surveys:', response.data.message);
                         }
@@ -159,12 +178,13 @@
                             for (const myResp of this.myResponses) {
                                 axios.get('${pageContext.request.contextPath}/api/survey/' + myResp.surveyId, {
                                     params: {
-                                        token : this.token
+                                        token: this.token
                                     }
                                 })
                                     .then(response => {
                                         if (response.data.code === 200) {
                                             myResp.survey = response.data.data;
+                                            myResp.survey.fillLink = "/views/survey/survey_fill.jsp?surveyId=" + myResp.survey.id;
                                         } else {
                                             console.error('Failed to fetch surveys:', response.data.message);
                                         }
@@ -181,8 +201,11 @@
                         console.error('Server internal error:', error);
                     });
             },
-            getSurveyLink(surveyId) {
-                return "/views/survey/survey_fill.jsp?surveyId=" + surveyId;
+            getSurveyFillLink(surveyId) {
+                return ;
+            },
+            getSurveyShareLink(surveyId) {
+
             }
         }
     });
