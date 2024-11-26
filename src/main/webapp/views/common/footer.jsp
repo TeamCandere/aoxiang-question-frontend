@@ -9,9 +9,8 @@
 <!-- 页脚 -->
 <div class="footer">
     <div class="container">
-        <p>开发人员：张三、李四、王五</p>
-        <p>项目仓库地址：<a href="https://github.com/example/repo" target="_blank">GitHub</a></p>
-        <p>系统版本：v1.0.0 | &copy; ${pageContext.request.contextPath} 2024</p>
+        <p>开发人员：刘黎可、徐薏茜、韩紫琪、贾聪毅、于李源、张书畅</p>
+        <p>系统版本：v1.0.0 | &copy; Team Candere 2024</p>
     </div>
 </div>
 </body>
