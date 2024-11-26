@@ -57,7 +57,7 @@ public class ResponseController {
         try {
             responseService.deleteResponse(responseId, token);
             return SaResult.ok("成功删除响应。");
-        } catch (UserServiceException | DatabaseAccessException | RuntimeException e) {
+        } catch (BusinessException | DatabaseAccessException e) {
             return SaResult.error(e.getMessage());
         }
     }

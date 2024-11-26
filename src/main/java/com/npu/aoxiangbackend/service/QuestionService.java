@@ -4,6 +4,7 @@ import cn.dev33.satoken.exception.NotImplException;
 import com.npu.aoxiangbackend.dao.IQuestionDao;
 import com.npu.aoxiangbackend.exception.business.QuestionServiceException;
 import com.npu.aoxiangbackend.exception.internal.DatabaseAccessException;
+import com.npu.aoxiangbackend.model.Answer;
 import com.npu.aoxiangbackend.model.Question;
 import com.npu.aoxiangbackend.model.QuestionType;
 import com.npu.aoxiangbackend.util.ColoredPrintStream;
@@ -92,6 +93,10 @@ public class QuestionService {
 
     private void reorderQuestion(long questionId, String tokenValue) {
         throw new NotImplException("该方法暂未实现");
+    }
+
+    public List<Question> getUnfilledQuestionsByResponseId(String responseId) {
+        return questionDao.findUnfilledQuestionsByResponseId(responseId);
     }
 
     public Question getRequiredQuestion(long questionId) throws DatabaseAccessException, QuestionServiceException {

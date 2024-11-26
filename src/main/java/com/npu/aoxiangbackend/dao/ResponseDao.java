@@ -28,15 +28,15 @@ public class ResponseDao implements IResponseDao {
         }
     }
 
-    public Optional<Response> findResponseBySurveyIdAndUserId(String surveyId, long userId) {
+    public List<Response> findResponsesBySurveyIdAndUserId(String surveyId, long userId) {
         try (Session session = sessionFactory.openSession()) { // 打开一个新的Session
             session.beginTransaction(); // 开始事务
             var query = session.createQuery("from Response where surveyId = :surveyId and userId = :userId", Response.class); // 创建查询
             query.setParameter("surveyId", surveyId); // 设置查询参数
             query.setParameter("userId", userId); // 设置查询参数
-            var response = query.uniqueResultOptional(); // 获取唯一结果或空
+            var responses = query.list(); // 获取结果列表
             session.getTransaction().commit(); // 提交事务
-            return response; // 返回结果
+            return responses; // 返回结果
         }
     }
 
