@@ -141,7 +141,7 @@ public class SurveyController {
             if (!canView) {
                 return SaResult.error(String.format("不存在ID为 %s 的问卷，或者你没有它的访问权限。", surveyId));
             }
-            String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/api/survey/" + surveyId + "?token=" + token;
+            String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/views/survey/survey_fill.jsp?surveyId="+ surveyId;
             return SaResult.ok().setData(url);
         } catch (DatabaseAccessException e) {
             return SaResult.error(e.getMessage());
