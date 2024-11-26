@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="true" %>
 <!DOCTYPE html>
@@ -15,11 +15,13 @@
         .card {
             width: 250px;
         }
+
         .description {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
+
         .btn-disabled {
             background-color: #17a2b8 !important; /* 保持查看按钮的蓝色 */
             border-color: #17a2b8 !important;
@@ -38,8 +40,9 @@
 
     <!-- 新建问卷按钮 -->
     <div class="text-right mb-3">
-        <a href="${pageContext.request.contextPath}/views/survey/survey_edit_new.jsp" class="btn btn-primary">创建新问卷</a>
-<%--        jfoweijfowiejfoiqawejdfoijwadiofjoawiej--%>
+        <a href="${pageContext.request.contextPath}/views/survey/survey_edit_new.jsp"
+           class="btn btn-primary">创建新问卷</a>
+        <%--        jfoweijfowiejfoiqawejdfoijwadiofjoawiej--%>
     </div>
 
     <!-- 已回答问卷部分 -->
@@ -48,7 +51,8 @@
         <div v-if="filledSurveys.length > 0" class="row">
             <div v-for="survey in filledSurveys" :key="survey.id" class="col-md-3 mb-3">
                 <div class="card mx-auto">
-                    <img v-if="survey.backgroundUrl" :src="survey.backgroundUrl" class="card-img-top" alt="背景图片" width="250" height="125" style="object-fit: cover;" />
+                    <img v-if="survey.backgroundUrl" :src="survey.backgroundUrl" class="card-img-top" alt="背景图片"
+                         width="250" height="125" style="object-fit: cover;"/>
                     <div class="card-body p-2">
                         <h5 class="card-title h6">{{ survey.title }}</h5>
                         <p class="card-text small description">{{ survey.description }}</p>
@@ -84,7 +88,8 @@
         <div v-if="createdSurveys.length > 0" class="row">
             <div v-for="survey in createdSurveys" :key="survey.id" class="col-md-3 mb-3">
                 <div class="card mx-auto">
-                    <img v-if="survey.backgroundUrl" :src="survey.backgroundUrl" class="card-img-top" alt="背景图片" width="250" height="125" style="object-fit: cover;" />
+                    <img v-if="survey.backgroundUrl" :src="survey.backgroundUrl" class="card-img-top" alt="背景图片"
+                         width="250" height="125" style="object-fit: cover;"/>
                     <div class="card-body p-2">
                         <h5 class="card-title h6">{{ survey.title }}</h5>
                         <p class="card-text small description">{{ survey.description }}</p>
@@ -136,7 +141,7 @@
         methods: {
             fetchCreatedSurveys() {
                 axios.get('${pageContext.request.contextPath}/api/survey/all', {
-                    params: { token: this.token }
+                    params: {token: this.token}
                 })
                     .then(response => {
                         if (response.data.code === 200) {
@@ -151,7 +156,7 @@
             },
             fetchFilledSurveys() {
                 axios.get('${pageContext.request.contextPath}/api/survey/filled', {
-                    params: { token: this.token }
+                    params: {token: this.token}
                 })
                     .then(response => {
                         if (response.data.code === 200) {

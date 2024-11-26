@@ -84,8 +84,8 @@ public class SurveyService {
         survey.setSubmitted(false); // 问卷未提交
         survey.setChecked(false); // 问卷未审核
         survey.setCheckerId(null); // 无审核者
-        survey.setLoginRequired(false); // 不需要登录
-        survey.setPublic(false); // 问卷不公开
+        survey.setLoginRequired(true); // 不需要登录
+        survey.setPublic(true); // 问卷不公开
         survey.setTitle("新建问卷"); // 默认标题
         survey.setDescription("新建问卷"); // 默认描述
         survey.setTotalResponses(0); // 总响应数为0
