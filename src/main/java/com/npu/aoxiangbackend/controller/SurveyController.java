@@ -10,6 +10,7 @@ import com.npu.aoxiangbackend.service.SurveyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -25,6 +26,7 @@ public class SurveyController {
 
     /**
      * 根据token获取该用户创建的所有问卷。
+     *
      * @param token 当前用户token。
      * @return json。
      */
@@ -40,6 +42,7 @@ public class SurveyController {
 
     /**
      * 获取所有用户创建的所有问卷。
+     *
      * @param token 管理员token。
      * @return json。
      */
@@ -108,6 +111,28 @@ public class SurveyController {
             surveyService.checkSurvey(surveyId, token);
             return SaResult.ok("成功审核问卷。");
         } catch (SurveyServiceException | UserServiceException | DatabaseAccessException e) {
+            return SaResult.error(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取问卷分享链接。
+     *
+     * @param request  Servlet请求。
+     * @param surveyId 问卷ID。
+     * @param token    用户token。
+     * @return json。
+     */
+    @RequestMapping(value = "/share/{surveyId}", method = {RequestMethod.GET, RequestMethod.POST})
+    public SaResult shareSurvey(HttpServletRequest request, @PathVariable String surveyId, @RequestParam(required = true) String token) {
+        try {
+            boolean canView = surveyService.canViewSurvey(surveyId, token);
+            if (!canView) {
+                return SaResult.error(String.format("不存在ID为 %s 的问卷，或者你没有它的访问权限。", surveyId));
+            }
+            String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/api/survey/" + surveyId + "?token=" + token;
+            return SaResult.ok().setData(url);
+        } catch (DatabaseAccessException e) {
             return SaResult.error(e.getMessage());
         }
     }
