@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: ASUS
-  Date: 2024/11/23
-  Time: 23:58
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
@@ -37,8 +30,8 @@
             position: relative;
             margin-top: auto; /* 确保主要内容区域占据剩余空间 */
             width: 100%;
-            max-width: 1300px;
-            height: 600px;
+            max-width: 1200px;
+            height: 600px; /* 设置固定高度 */
             margin-left: auto;
             margin-right: auto;
             background-color: #fff;
@@ -49,11 +42,26 @@
             box-shadow: #00000017 1px 1px 10px;
         }
         .login .right {
-            flex: 50%;
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         .login .left {
-            flex: 50%;
+            flex: 1;
             text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* 确保图片不会超出容器 */
+        }
+        .login .left img {
+            max-width: 100%; /* 图片最大宽度不超过容器 */
+            max-height: 100%; /* 图片最大高度不超过容器 */
+            object-fit: contain; /* 保持图片比例 */
+            height: 100%; /* 使图片高度与容器高度一致 */
+            width: auto; /* 保持图片比例 */
         }
         .login-btn {
             width: 100%;
@@ -80,10 +88,12 @@
 </head>
 <body>
 <!-- 顶部导航栏 (Banner) -->
-<%--<jsp:include page="../common/banner.jsp" />--%>
+<jsp:include page="../common/banner_login.jsp" />
 <div id="app" class="container mt-5">
     <div class="login">
-        <div class="left"></div>
+        <div class="left">
+            <img src='<c:url value="/static/img/login.png"/>' alt="Login Image">
+        </div>
         <div class="right">
             <div class="row justify-content-center">
                 <div class="col-md-6">
