@@ -72,7 +72,7 @@
             <div class="out">
                 <div class="left">
                     <div class="img"></div>
-                    <div class="username">{{ userData.username }}</div>
+                    <div class="username">{{ userData?.displayName || '用户名' }}</div>
                 </div>
             </div>
         </div>
@@ -186,7 +186,7 @@
             }
         },
         mounted() {
-            this.originalData = {...this.userData}; // 保存原始数据
+            this.fetchUserData();
         }
     });
 
