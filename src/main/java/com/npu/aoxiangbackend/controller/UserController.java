@@ -6,6 +6,7 @@ import com.npu.aoxiangbackend.exception.internal.DatabaseAccessException;
 import com.npu.aoxiangbackend.exception.internal.InternalException;
 import com.npu.aoxiangbackend.model.User;
 import com.npu.aoxiangbackend.protocol.LoginRequest;
+import com.npu.aoxiangbackend.protocol.ModifyProfileRequest;
 import com.npu.aoxiangbackend.protocol.RegisterRequest;
 import com.npu.aoxiangbackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,20 +91,30 @@ public class UserController {
     }
 
     @RequestMapping(value = "/all", method = {RequestMethod.GET, RequestMethod.POST})
-    public SaResult getAllUsers(@RequestParam(required = true) String token){
-        try{
+    public SaResult getAllUsers(@RequestParam(required = true) String token) {
+        try {
             var users = userService.getAllUsers(token);
-            return SaResult.ok(String.format("获取到%d个用户。",users.size())).setData(users);
+            return SaResult.ok(String.format("获取到%d个用户。", users.size())).setData(users);
         } catch (UserServiceException | DatabaseAccessException e) {
             return SaResult.error(e.getMessage());
         }
     }
 
     @RequestMapping(value = "/count", method = {RequestMethod.GET, RequestMethod.POST})
-    public SaResult getUserCount(@RequestParam(required = true) String token){
-        try{
+    public SaResult getUserCount(@RequestParam(required = true) String token) {
+        try {
             var userNum = userService.getUserNum(token);
             return SaResult.ok().setData(userNum);
+        } catch (UserServiceException | DatabaseAccessException e) {
+            return SaResult.error(e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "/modify", method = RequestMethod.POST)
+    public SaResult editUserProfile(@RequestBody ModifyProfileRequest modRequest, @RequestParam String token) {
+        try {
+            userService.editUserProfile(modRequest.getDisplayName(), modRequest.getOldPassword(), modRequest.getNewPassword(), modRequest.getEmail(), modRequest.getPhone(), token);
+            return SaResult.ok("成功修改用户信息。");
         } catch (UserServiceException | DatabaseAccessException e) {
             return SaResult.error(e.getMessage());
         }
